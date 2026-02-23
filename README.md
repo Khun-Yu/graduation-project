@@ -267,9 +267,9 @@
 - **インタラクティブワイヤーフレーム**：`wireframes/index.html`（全8画面のプロトタイプ）
 - **画面遷移図（HTML版）**：`wireframes/transition-map.html`（3つのユーザーフロー付き）
 
-### 画面遷移図（FigJam）
+### 画面遷移図（Figma）
 
-- **FigJam 画面遷移図**：https://www.figma.com/board/81855703-e167-4b79-b3a4-fe9cf69f8afd
+- **Figma 画面遷移図**：https://www.figma.com/design/2uNpfKcKQyPhTyfLIZ6899/%E4%BF%9D%E9%99%BAQ-A---%E7%94%BB%E9%9D%A2%E9%81%B7%E7%A7%BB%E5%9B%B3-v4?node-id=0-1&t=jeE5JyWALr0CQgqD-1
 
 ### 画面一覧
 
@@ -283,3 +283,5 @@
 | 6 | Q&A詳細 | 不要 | 質問の詳細、AI回答、人間の補足回答表示 |
 | 7 | 質問投稿 | 必要 | 新しい質問の作成・投稿 |
 | 8 | マイページ | 必要 | プロフィール、質問履歴、ブックマーク管理 |
+| 9 | 利用規約 | 不要 | サービスの利用規約を表示 |
+| 10 | プライバシーポリシー | 不要 | 個人情報の取り扱いに関するポリシーを表示 |
