@@ -1,0 +1,1773 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="保険Q&A v2 - 画面遷移図。AI+人間のハイブリッド回答モデル。全8画面の遷移フローとユーザーフローを可視化したインタラクティブな画面遷移図。">
+  <meta property="og:title" content="保険Q&A v2 - 画面遷移図">
+  <meta property="og:description" content="保険Q&Aサービスの画面遷移フローを可視化したインタラクティブ画面遷移図">
+  <meta property="og:type" content="website">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%234A7C9B'/><text x='16' y='22' font-size='18' text-anchor='middle' fill='white'>Q</text></svg>">
+  <title>保険Q&A v2 - 画面遷移図</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://unpkg.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    /* ===== Design System Tokens (shared with index.html) ===== */
+    :root {
+      --color-primary: #4A7C9B;
+      --color-primary-dark: #3A6280;
+      --color-primary-light: #6A9CBB;
+      --color-accent: #E8734A;
+      --color-accent-dark: #D0603A;
+      --color-accent-light: #F09070;
+      --color-bg: #F7F5F2;
+      --color-surface: #FFFFFF;
+      --color-text: #2D3748;
+      --color-text-secondary: #718096;
+      --color-text-muted: #A0AEC0;
+      --color-border: #E2E8F0;
+      --color-border-light: #EDF2F7;
+      --color-success: #38A169;
+      --color-success-bg: #F0FFF4;
+      --color-warning: #D69E2E;
+      --color-warning-bg: #FFFFF0;
+      --color-danger: #E53E3E;
+      --color-danger-bg: #FFF5F5;
+
+      /* v2: AI & Human answer colors */
+      --color-ai: #38A169;
+      --color-ai-bg: #F0FFF4;
+      --color-human: #C05621;
+      --color-human-bg: #FFFAF0;
+
+      --cat-fire: #E8734A;
+      --cat-auto: #4A7C9B;
+      --cat-injury: #9B59B6;
+      --cat-life: #38A169;
+
+      --font-sans: 'Noto Sans JP', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-display: 'Inter', 'Noto Sans JP', sans-serif;
+
+      --text-xs: 0.75rem;
+      --text-sm: 0.875rem;
+      --text-base: 1rem;
+      --text-lg: 1.125rem;
+      --text-xl: 1.25rem;
+      --text-2xl: 1.5rem;
+      --text-3xl: 1.875rem;
+      --text-4xl: 2.25rem;
+      --leading-tight: 1.25;
+      --leading-normal: 1.6;
+      --leading-relaxed: 1.8;
+
+      --space-1: 4px;
+      --space-2: 8px;
+      --space-3: 12px;
+      --space-4: 16px;
+      --space-5: 20px;
+      --space-6: 24px;
+      --space-8: 32px;
+      --space-10: 40px;
+      --space-12: 48px;
+      --space-16: 64px;
+
+      --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+      --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.07), 0 2px 4px -1px rgba(0,0,0,0.04);
+      --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.08), 0 4px 6px -2px rgba(0,0,0,0.04);
+      --shadow-xl: 0 20px 25px -5px rgba(0,0,0,0.08), 0 10px 10px -5px rgba(0,0,0,0.03);
+
+      --radius-sm: 6px;
+      --radius-md: 8px;
+      --radius-lg: 12px;
+      --radius-xl: 16px;
+      --radius-full: 9999px;
+
+      --transition-fast: 0.15s ease;
+      --transition-base: 0.25s ease;
+      --transition-slow: 0.4s ease;
+    }
+
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--font-sans);
+      background: var(--color-bg);
+      color: var(--color-text);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      overflow: hidden;
+      height: 100vh;
+    }
+    a { color: var(--color-primary); text-decoration: none; }
+    :focus-visible {
+      outline: 2px solid var(--color-primary);
+      outline-offset: 2px;
+    }
+
+    /* ===== Top Bar ===== */
+    .top-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      background: var(--color-surface);
+      border-bottom: 1px solid var(--color-border);
+      box-shadow: var(--shadow-sm);
+      z-index: 100;
+      padding: var(--space-3) var(--space-6);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-4);
+    }
+    .top-bar__title-group {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+    }
+    .top-bar__logo {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+      background: var(--color-primary);
+      color: var(--color-surface);
+      border-radius: var(--radius-sm);
+      font-size: var(--text-sm);
+      font-weight: 700;
+    }
+    .top-bar__title {
+      font-family: var(--font-display);
+      font-size: var(--text-lg);
+      font-weight: 700;
+      color: var(--color-text);
+    }
+    .top-bar__subtitle {
+      font-size: var(--text-xs);
+      color: var(--color-text-muted);
+    }
+    .top-bar__controls {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+    }
+    .top-bar__btn {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-1);
+      padding: var(--space-2) var(--space-3);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      background: var(--color-surface);
+      font-size: var(--text-xs);
+      font-weight: 500;
+      color: var(--color-text-secondary);
+      cursor: pointer;
+      transition: all var(--transition-fast);
+      font-family: var(--font-sans);
+    }
+    .top-bar__btn:hover {
+      border-color: var(--color-primary);
+      color: var(--color-primary);
+    }
+    .top-bar__btn.active {
+      background: var(--color-primary);
+      color: var(--color-surface);
+      border-color: var(--color-primary);
+    }
+    .top-bar__btn.active-accent {
+      background: var(--color-accent);
+      color: var(--color-surface);
+      border-color: var(--color-accent);
+    }
+    .top-bar__btn.active-human {
+      background: var(--color-human);
+      color: var(--color-surface);
+      border-color: var(--color-human);
+    }
+    .top-bar__link {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-1);
+      padding: var(--space-2) var(--space-3);
+      border: 1px solid var(--color-primary);
+      border-radius: var(--radius-md);
+      font-size: var(--text-xs);
+      font-weight: 600;
+      color: var(--color-primary);
+      transition: all var(--transition-fast);
+    }
+    .top-bar__link:hover {
+      background: var(--color-primary);
+      color: var(--color-surface);
+      text-decoration: none;
+    }
+    .top-bar__sep {
+      width: 1px;
+      height: 28px;
+      background: var(--color-border);
+      align-self: center;
+    }
+
+    /* ===== Legend ===== */
+    .legend {
+      position: fixed;
+      top: 60px;
+      right: var(--space-4);
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      padding: var(--space-4);
+      box-shadow: var(--shadow-md);
+      z-index: 90;
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-3);
+    }
+    .legend__title {
+      font-size: var(--text-xs);
+      font-weight: 600;
+      color: var(--color-text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .legend__item {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      font-size: var(--text-xs);
+      color: var(--color-text-secondary);
+    }
+    .legend__dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 3px;
+      flex-shrink: 0;
+    }
+    .legend__dot--public { background: var(--color-success); }
+    .legend__dot--auth { background: var(--color-danger); }
+    .legend__dot--flow-questioner { background: var(--color-accent); }
+    .legend__dot--flow-answerer { background: var(--color-human); }
+    .legend__dot--flow-viewer { background: var(--color-primary); }
+    .legend__divider {
+      height: 1px;
+      background: var(--color-border-light);
+    }
+
+    /* ===== Canvas ===== */
+    .canvas-container {
+      position: fixed;
+      top: 52px;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      overflow: hidden;
+      cursor: grab;
+    }
+    .canvas-container:active { cursor: grabbing; }
+    .canvas {
+      position: absolute;
+      width: 2400px;
+      height: 2100px;
+      transform-origin: 0 0;
+      transition: transform 0.1s ease-out;
+    }
+
+    /* ===== SVG Arrows ===== */
+    .arrows-layer {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 1;
+    }
+    .arrows-layer path {
+      fill: none;
+      stroke: var(--color-text-muted);
+      stroke-width: 2;
+      transition: stroke var(--transition-base), stroke-width var(--transition-base), opacity var(--transition-base);
+    }
+    .arrows-layer path.highlight-questioner {
+      stroke: var(--color-accent);
+      stroke-width: 3;
+    }
+    .arrows-layer path.highlight-answerer {
+      stroke: var(--color-human);
+      stroke-width: 3;
+    }
+    .arrows-layer path.highlight-viewer {
+      stroke: var(--color-primary);
+      stroke-width: 3;
+    }
+    .arrows-layer marker path {
+      fill: var(--color-text-muted);
+      stroke: none;
+    }
+    .arrow-label {
+      position: absolute;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--color-text);
+      background: var(--color-surface);
+      border: 1px solid var(--color-border-light);
+      padding: 2px 6px;
+      border-radius: var(--radius-sm);
+      white-space: nowrap;
+      pointer-events: none;
+      z-index: 2;
+      transition: opacity var(--transition-base);
+    }
+    .arrow-label.success {
+      color: var(--color-success);
+    }
+    .arrow-label.ai-color {
+      color: var(--color-ai);
+    }
+    .arrow-label.human-color {
+      color: var(--color-human);
+    }
+
+    /* ===== Section Labels ===== */
+    .section-label {
+      position: absolute;
+      font-size: var(--text-sm);
+      font-weight: 700;
+      color: var(--color-text);
+      background: rgba(74,124,155,0.08);
+      padding: var(--space-2) var(--space-4);
+      border-radius: var(--radius-md);
+      border-left: 3px solid var(--color-primary);
+      z-index: 3;
+      max-width: 400px;
+      white-space: nowrap;
+    }
+
+    /* ===== Screen Cards ===== */
+    .screen-card {
+      position: absolute;
+      width: 300px;
+      background: var(--color-surface);
+      border: 2px solid var(--color-border);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-md);
+      overflow: hidden;
+      transition: transform var(--transition-base), box-shadow var(--transition-base), border-color var(--transition-base), opacity var(--transition-base);
+      cursor: pointer;
+      z-index: 5;
+    }
+    .screen-card:hover {
+      transform: scale(1.03);
+      box-shadow: var(--shadow-xl);
+      border-color: var(--color-primary);
+      z-index: 15;
+    }
+    .screen-card:focus-visible {
+      outline: 3px solid var(--color-primary);
+      outline-offset: -3px;
+      z-index: 15;
+    }
+    .screen-card.highlight-questioner {
+      border-color: var(--color-accent);
+      box-shadow: 0 0 0 3px rgba(232,115,74,0.2), var(--shadow-lg);
+    }
+    .screen-card.highlight-answerer {
+      border-color: var(--color-human);
+      box-shadow: 0 0 0 3px rgba(192,86,33,0.2), var(--shadow-lg);
+    }
+    .screen-card.highlight-viewer {
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 3px rgba(74,124,155,0.2), var(--shadow-lg);
+    }
+    .screen-card__header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: var(--space-3) var(--space-4);
+      background: var(--color-bg);
+      border-bottom: 1px solid var(--color-border-light);
+    }
+    .screen-card__title {
+      font-size: var(--text-sm);
+      font-weight: 700;
+      color: var(--color-text);
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+    }
+    .screen-card__num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 22px;
+      height: 22px;
+      border-radius: var(--radius-full);
+      background: var(--color-primary);
+      color: var(--color-surface);
+      font-size: 11px;
+      font-weight: 700;
+    }
+    .screen-card__badge {
+      font-size: 10px;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: var(--radius-full);
+    }
+    .screen-card__badge--public {
+      background: var(--color-success-bg);
+      color: var(--color-success);
+    }
+    .screen-card__badge--auth {
+      background: var(--color-danger-bg);
+      color: var(--color-danger);
+    }
+    .screen-card__body {
+      padding: 0;
+    }
+
+    /* Mini screen styles */
+    .mini-header {
+      background: var(--color-primary-dark);
+      color: var(--color-surface);
+      padding: 8px 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .mini-header__logo {
+      font-weight: 700;
+      font-size: 11px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .mini-header__logo-icon {
+      width: 16px;
+      height: 16px;
+      background: rgba(255,255,255,0.2);
+      border-radius: 3px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 8px;
+    }
+    .mini-header nav {
+      display: flex;
+      gap: 4px;
+    }
+    .mini-header nav a {
+      color: rgba(255,255,255,0.85);
+      font-size: 8px;
+      padding: 2px 5px;
+      border-radius: 3px;
+      text-decoration: none;
+    }
+    .mini-header nav a.active-link {
+      color: #fff;
+      font-weight: 600;
+      border-bottom: 1px solid #fff;
+    }
+    .mini-header nav a.btn-p {
+      background: rgba(255,255,255,0.2);
+      color: #fff;
+    }
+    .mini-header nav a.btn-o {
+      border: 1px solid rgba(255,255,255,0.4);
+      color: rgba(255,255,255,0.9);
+    }
+
+    .mini-main {
+      padding: 12px;
+      background: var(--color-bg);
+      overflow: hidden;
+    }
+    .mini-footer {
+      background: var(--color-text);
+      color: #CBD5E0;
+      padding: 6px;
+      text-align: center;
+      font-size: 7px;
+    }
+    .mini-h1 {
+      font-size: 13px;
+      text-align: center;
+      margin-bottom: 10px;
+      color: var(--color-text);
+      font-weight: 700;
+    }
+    .mini-h2 {
+      font-size: 10px;
+      margin-bottom: 6px;
+      color: var(--color-text);
+      font-weight: 600;
+    }
+    .mini-input {
+      width: 100%;
+      padding: 5px 8px;
+      border: 1.5px solid var(--color-border);
+      border-radius: var(--radius-sm);
+      font-size: 9px;
+      margin-bottom: 6px;
+      background: var(--color-surface);
+    }
+    .mini-label {
+      font-size: 9px;
+      font-weight: 600;
+      margin-bottom: 2px;
+      display: block;
+      color: var(--color-text-secondary);
+    }
+    .mini-textarea {
+      width: 100%;
+      padding: 5px 8px;
+      border: 1.5px solid var(--color-border);
+      border-radius: var(--radius-sm);
+      font-size: 9px;
+      height: 50px;
+      background: var(--color-surface);
+      margin-bottom: 6px;
+    }
+    .mini-btn {
+      display: block;
+      width: 100%;
+      padding: 7px;
+      border: none;
+      border-radius: var(--radius-sm);
+      font-size: 10px;
+      font-weight: 600;
+      color: #fff;
+      text-align: center;
+      margin-bottom: 6px;
+    }
+    .mini-btn--primary { background: var(--color-primary); }
+    .mini-btn--accent { background: var(--color-accent); }
+    .mini-btn--success { background: var(--color-success); }
+    .mini-btn--ai { background: var(--color-ai); }
+    .mini-btn--human { background: var(--color-human); }
+    .mini-link {
+      color: var(--color-primary);
+      font-size: 9px;
+    }
+    .mini-center { text-align: center; }
+
+    .mini-card {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border-light);
+      border-radius: var(--radius-sm);
+      padding: 8px;
+      margin-bottom: 6px;
+    }
+    .mini-badge {
+      display: inline-block;
+      padding: 1px 5px;
+      border-radius: var(--radius-full);
+      font-size: 8px;
+      font-weight: 600;
+    }
+    .mini-badge--fire { background: rgba(232,115,74,0.12); color: var(--cat-fire); }
+    .mini-badge--auto { background: rgba(74,124,155,0.12); color: var(--cat-auto); }
+    .mini-badge--injury { background: rgba(155,89,182,0.12); color: var(--cat-injury); }
+    .mini-card-title {
+      font-size: 9px;
+      font-weight: 600;
+      margin: 3px 0 2px;
+      color: var(--color-text);
+    }
+    .mini-card-text {
+      font-size: 8px;
+      color: var(--color-text-muted);
+      line-height: 1.3;
+    }
+    .mini-meta {
+      font-size: 7px;
+      color: var(--color-text-muted);
+      margin-top: 3px;
+    }
+
+    .mini-hero {
+      background: linear-gradient(135deg, var(--color-primary-dark), var(--color-primary-light));
+      color: #fff;
+      padding: 14px 10px;
+      border-radius: var(--radius-md);
+      text-align: center;
+      margin-bottom: 10px;
+    }
+    .mini-hero h3 { font-size: 11px; margin-bottom: 4px; }
+    .mini-hero p { font-size: 8px; opacity: 0.9; margin-bottom: 8px; }
+
+    .mini-ai-search {
+      display: flex;
+      gap: 0;
+      background: var(--color-surface);
+      border-radius: var(--radius-full);
+      overflow: hidden;
+      border: 2px solid rgba(255,255,255,0.3);
+    }
+    .mini-ai-search input {
+      flex: 1;
+      padding: 5px 10px;
+      border: none;
+      font-size: 8px;
+      outline: none;
+      background: transparent;
+    }
+    .mini-ai-search .send-btn {
+      width: 26px;
+      height: 26px;
+      background: var(--color-ai);
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+    .mini-ai-search .send-btn::after {
+      content: '';
+      width: 0;
+      height: 0;
+      border-left: 6px solid #fff;
+      border-top: 4px solid transparent;
+      border-bottom: 4px solid transparent;
+      margin-left: 1px;
+    }
+
+    .mini-ai-search-standalone {
+      display: flex;
+      gap: 0;
+      background: var(--color-surface);
+      border-radius: var(--radius-full);
+      overflow: hidden;
+      border: 1.5px solid var(--color-border);
+      margin-bottom: 8px;
+    }
+    .mini-ai-search-standalone input {
+      flex: 1;
+      padding: 5px 10px;
+      border: none;
+      font-size: 8px;
+      outline: none;
+      background: transparent;
+    }
+    .mini-ai-search-standalone .send-btn {
+      width: 24px;
+      height: 24px;
+      background: var(--color-ai);
+      border: none;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      flex-shrink: 0;
+      margin: 2px;
+    }
+    .mini-ai-search-standalone .send-btn::after {
+      content: '';
+      width: 0;
+      height: 0;
+      border-left: 5px solid #fff;
+      border-top: 3px solid transparent;
+      border-bottom: 3px solid transparent;
+      margin-left: 1px;
+    }
+
+    .mini-feature-pills {
+      display: flex;
+      gap: 4px;
+      margin-bottom: 10px;
+      justify-content: center;
+    }
+    .mini-feature-pill {
+      padding: 3px 8px;
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-sm);
+      font-size: 7px;
+      font-weight: 600;
+      color: var(--color-text-secondary);
+      text-align: center;
+    }
+
+    .mini-answer-dots {
+      display: flex;
+      gap: 3px;
+      align-items: center;
+      margin-top: 3px;
+    }
+    .mini-answer-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .mini-answer-dot--ai { background: var(--color-ai); }
+    .mini-answer-dot--human { background: var(--color-human); }
+    .mini-answer-count {
+      font-size: 7px;
+      color: var(--color-text-muted);
+    }
+
+    .mini-filter-tags {
+      display: flex;
+      gap: 3px;
+      margin-bottom: 8px;
+      flex-wrap: wrap;
+    }
+    .mini-filter-tag {
+      padding: 2px 6px;
+      border-radius: var(--radius-full);
+      font-size: 7px;
+      font-weight: 600;
+      border: 1px solid var(--color-border);
+      background: var(--color-surface);
+      color: var(--color-text-secondary);
+    }
+    .mini-filter-tag.active {
+      background: var(--color-primary);
+      color: #fff;
+      border-color: var(--color-primary);
+    }
+
+    .mini-warning {
+      background: rgba(214,158,46,0.1);
+      border: 1px solid rgba(214,158,46,0.3);
+      border-radius: var(--radius-sm);
+      padding: 6px;
+      font-size: 8px;
+      color: #5C3600;
+      margin-top: 6px;
+    }
+    .mini-pagination {
+      display: flex;
+      justify-content: center;
+      gap: 3px;
+      margin-top: 8px;
+    }
+    .mini-pagination a {
+      padding: 2px 6px;
+      border: 1px solid var(--color-border);
+      border-radius: 3px;
+      font-size: 8px;
+      text-decoration: none;
+      color: var(--color-text-secondary);
+    }
+    .mini-pagination a.current {
+      background: var(--color-primary);
+      color: #fff;
+      border-color: var(--color-primary);
+    }
+    .mini-profile {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--color-surface);
+      border: 1px solid var(--color-border-light);
+      border-radius: var(--radius-sm);
+      padding: 8px;
+      margin-bottom: 8px;
+    }
+    .mini-avatar {
+      width: 28px;
+      height: 28px;
+      background: linear-gradient(135deg, var(--color-primary), var(--color-primary-light));
+      border-radius: var(--radius-full);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 11px;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+    .mini-avatar--sm {
+      width: 16px;
+      height: 16px;
+      font-size: 7px;
+    }
+    .mini-avatar--human {
+      background: linear-gradient(135deg, var(--color-human), #DD6B20);
+    }
+    .mini-back {
+      font-size: 9px;
+      color: var(--color-primary);
+      display: inline-block;
+      margin-bottom: 6px;
+    }
+    .mini-q-card { border-left: 3px solid var(--color-primary); }
+    .mini-a-card { border-left: 3px solid var(--color-ai); background: var(--color-ai-bg); }
+    .mini-human-card { border-left: 3px solid var(--color-human); background: var(--color-human-bg); }
+
+    .mini-tab-bar {
+      display: flex;
+      gap: 0;
+      margin-bottom: 8px;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+    }
+    .mini-tab {
+      flex: 1;
+      padding: 4px 8px;
+      font-size: 9px;
+      font-weight: 600;
+      text-align: center;
+      background: var(--color-surface);
+      color: var(--color-text-secondary);
+      border-right: 1px solid var(--color-border);
+    }
+    .mini-tab:last-child { border-right: none; }
+    .mini-tab.active {
+      background: var(--color-primary);
+      color: #fff;
+    }
+
+    .mini-suggestions {
+      background: var(--color-ai-bg);
+      border: 1px solid rgba(56,161,105,0.2);
+      border-radius: var(--radius-sm);
+      padding: 6px;
+      margin-bottom: 6px;
+    }
+    .mini-suggestions-title {
+      font-size: 8px;
+      font-weight: 600;
+      color: var(--color-ai);
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 3px;
+    }
+    .mini-suggestion-item {
+      font-size: 7px;
+      color: var(--color-text-secondary);
+      padding: 2px 0;
+      border-bottom: 1px solid rgba(56,161,105,0.1);
+    }
+    .mini-suggestion-item:last-child { border-bottom: none; }
+
+    .mini-answer-input {
+      background: var(--color-surface);
+      border: 1.5px solid var(--color-border);
+      border-radius: var(--radius-sm);
+      padding: 6px;
+      margin-top: 6px;
+    }
+    .mini-answer-input-label {
+      font-size: 8px;
+      font-weight: 600;
+      color: var(--color-human);
+      margin-bottom: 3px;
+    }
+    .mini-answer-textarea {
+      width: 100%;
+      height: 24px;
+      border: 1px solid var(--color-border-light);
+      border-radius: 3px;
+      font-size: 7px;
+      padding: 3px 5px;
+      margin-bottom: 3px;
+    }
+    .mini-answer-submit {
+      display: inline-block;
+      padding: 3px 10px;
+      background: var(--color-human);
+      color: #fff;
+      border: none;
+      border-radius: 3px;
+      font-size: 7px;
+      font-weight: 600;
+    }
+
+    /* ===== Zoom Controls ===== */
+    .zoom-controls {
+      position: fixed;
+      bottom: var(--space-6);
+      right: var(--space-6);
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-1);
+      z-index: 90;
+    }
+    .zoom-btn {
+      width: 40px;
+      height: 40px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      background: var(--color-surface);
+      cursor: pointer;
+      color: var(--color-text-secondary);
+      box-shadow: var(--shadow-md);
+      transition: all var(--transition-fast);
+      font-family: var(--font-sans);
+    }
+    .zoom-btn:hover {
+      border-color: var(--color-primary);
+      color: var(--color-primary);
+    }
+    .zoom-level {
+      text-align: center;
+      font-size: var(--text-xs);
+      color: var(--color-text-muted);
+      padding: var(--space-1) 0;
+    }
+
+    /* ===== Responsive ===== */
+    @media (max-width: 768px) {
+      .legend { display: none; }
+      .top-bar { padding: var(--space-2) var(--space-3); }
+      .top-bar__subtitle { display: none; }
+    }
+
+    /* ===== Print (A3 landscape) ===== */
+    @media print {
+      @page {
+        size: A3 landscape;
+        margin: 10mm;
+      }
+      body {
+        overflow: visible;
+        height: auto;
+        background: #fff;
+      }
+      .top-bar, .legend, .zoom-controls { display: none; }
+      .canvas-container {
+        position: static;
+        overflow: visible;
+        height: auto;
+      }
+      .canvas {
+        position: static;
+        transform: scale(0.33) !important;
+        transform-origin: top left;
+      }
+      .screen-card { break-inside: avoid; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        transition-duration: 0.01ms !important;
+      }
+      .screen-card:hover { transform: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Top Bar -->
+<header class="top-bar" role="banner">
+  <div class="top-bar__title-group">
+    <span class="top-bar__logo">Q</span>
+    <div>
+      <div class="top-bar__title">保険Q&amp;A v2 - 画面遷移図</div>
+      <div class="top-bar__subtitle">AI+人間 ハイブリッド回答モデル | 全8画面</div>
+    </div>
+  </div>
+  <div class="top-bar__controls">
+    <button class="top-bar__btn" id="btnFlowQuestioner" onclick="highlightFlow('questioner')" aria-pressed="false">
+      <i data-lucide="user-plus" style="width:13px;height:13px;" aria-hidden="true"></i>
+      初めての質問者
+    </button>
+    <button class="top-bar__btn" id="btnFlowAnswerer" onclick="highlightFlow('answerer')" aria-pressed="false">
+      <i data-lucide="message-circle" style="width:13px;height:13px;" aria-hidden="true"></i>
+      回答者フロー
+    </button>
+    <button class="top-bar__btn" id="btnFlowViewer" onclick="highlightFlow('viewer')" aria-pressed="false">
+      <i data-lucide="eye" style="width:13px;height:13px;" aria-hidden="true"></i>
+      閲覧のみ
+    </button>
+    <div class="top-bar__sep"></div>
+    <button class="top-bar__btn" onclick="fitToScreen()" aria-label="画面に合わせる">
+      <i data-lucide="maximize" style="width:13px;height:13px;" aria-hidden="true"></i>
+      フィット
+    </button>
+    <a href="index.html" class="top-bar__link">
+      <i data-lucide="monitor" style="width:13px;height:13px;"></i>
+      ワイヤーフレーム
+    </a>
+  </div>
+</header>
+
+<!-- Legend -->
+<aside class="legend" role="complementary" aria-label="凡例">
+  <div class="legend__title">凡例</div>
+  <div class="legend__item">
+    <div class="legend__dot legend__dot--public"></div>
+    公開ページ
+  </div>
+  <div class="legend__item">
+    <div class="legend__dot legend__dot--auth"></div>
+    要認証
+  </div>
+  <div class="legend__divider"></div>
+  <div class="legend__item">
+    <div class="legend__dot legend__dot--flow-questioner"></div>
+    初めての質問者
+  </div>
+  <div class="legend__item">
+    <div class="legend__dot legend__dot--flow-answerer"></div>
+    回答者フロー
+  </div>
+  <div class="legend__item">
+    <div class="legend__dot legend__dot--flow-viewer"></div>
+    閲覧のみ
+  </div>
+</aside>
+
+<!-- Canvas -->
+<div class="canvas-container" id="canvasContainer">
+  <div class="canvas" id="canvas">
+
+    <!-- SVG Arrow Layer -->
+    <svg class="arrows-layer" id="arrowsSvg" viewBox="0 0 2400 2100" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="presentation">
+      <defs>
+        <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+          <path d="M0,0 L10,3.5 L0,7 Z" fill="#A0AEC0"/>
+        </marker>
+        <marker id="arrowhead-accent" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+          <path d="M0,0 L10,3.5 L0,7 Z" fill="#E8734A"/>
+        </marker>
+        <marker id="arrowhead-primary" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+          <path d="M0,0 L10,3.5 L0,7 Z" fill="#4A7C9B"/>
+        </marker>
+        <marker id="arrowhead-success" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+          <path d="M0,0 L10,3.5 L0,7 Z" fill="#38A169"/>
+        </marker>
+        <marker id="arrowhead-human" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+          <path d="M0,0 L10,3.5 L0,7 Z" fill="#C05621"/>
+        </marker>
+      </defs>
+
+      <!-- 1. トップ → Q&A一覧 ("Q&A一覧へ") -->
+      <path d="M400,300 C500,300 600,300 700,300" marker-end="url(#arrowhead)" data-flow="questioner viewer" id="arrow-top-qalist"/>
+
+      <!-- 2. トップ → 新規登録 ("新規登録") -->
+      <path d="M250,480 C250,560 250,640 250,700" marker-end="url(#arrowhead)" data-flow="questioner" id="arrow-top-signup"/>
+
+      <!-- 3. トップ → ログイン ("ログイン") -->
+      <path d="M350,480 C500,580 700,650 700,700" marker-end="url(#arrowhead)" data-flow="questioner" id="arrow-top-login"/>
+
+      <!-- 4. 新規登録 → ログイン ("登録完了") -->
+      <path d="M400,900 C500,900 600,900 700,900" marker-end="url(#arrowhead-success)" data-flow="questioner" id="arrow-signup-login"/>
+
+      <!-- 5. ログイン → Q&A一覧 ("ログイン成功") -->
+      <path d="M850,700 C850,550 850,400 850,300" marker-end="url(#arrowhead-success)" data-flow="questioner answerer" id="arrow-login-qalist"/>
+
+      <!-- 6. ログイン → PW再設定 ("PW忘れ") -->
+      <path d="M1000,900 C1100,900 1200,900 1300,900" marker-end="url(#arrowhead)" data-flow="questioner" id="arrow-login-pwreset"/>
+
+      <!-- 7. PW再設定 → ログイン ("再設定完了") -->
+      <path d="M1300,830 C1200,830 1100,830 1000,830" marker-end="url(#arrowhead-success)" data-flow="questioner" id="arrow-pwreset-login"/>
+
+      <!-- 8. Q&A一覧 → Q&A詳細 ("質問クリック") -->
+      <path d="M1000,300 C1100,300 1200,300 1300,300" marker-end="url(#arrowhead)" data-flow="questioner answerer viewer" id="arrow-qalist-qadetail"/>
+
+      <!-- 9. Q&A一覧 → 質問投稿 ("質問する") -->
+      <path d="M750,480 C750,800 550,1200 550,1300" marker-end="url(#arrowhead)" data-flow="questioner" id="arrow-qalist-qpost"/>
+
+      <!-- 10. Q&A詳細 → Q&A一覧 ("一覧に戻る") -->
+      <path d="M1300,370 C1200,400 1050,420 1000,400" marker-end="url(#arrowhead)" data-flow="viewer" id="arrow-qadetail-qalist"/>
+
+      <!-- 11. Q&A詳細 → 質問投稿 ("新たに質問") - NEW -->
+      <path d="M1450,480 C1450,800 750,1200 700,1300" marker-end="url(#arrowhead)" data-flow="questioner" id="arrow-qadetail-qpost"/>
+
+      <!-- 12. 質問投稿 → Q&A詳細 ("AI回答表示") -->
+      <path d="M700,1400 C1000,1300 1300,800 1500,480" marker-end="url(#arrowhead-success)" data-flow="questioner" id="arrow-qpost-qadetail"/>
+
+      <!-- 13. Q&A一覧 → マイページ ("マイページ") -->
+      <path d="M900,480 C950,800 1100,1200 1100,1300" marker-end="url(#arrowhead)" data-flow="questioner answerer" id="arrow-qalist-mypage"/>
+
+      <!-- 14. マイページ → Q&A詳細 ("履歴から詳細") -->
+      <path d="M1300,1400 C1500,1300 1600,700 1550,480" marker-end="url(#arrowhead)" data-flow="questioner answerer" id="arrow-mypage-qadetail"/>
+
+      <!-- 15. Q&A詳細 → Q&A詳細 self-loop ("補足回答を投稿") -->
+      <path d="M1600,350 C1700,350 1720,200 1600,200 C1480,200 1500,280 1600,280" marker-end="url(#arrowhead-human)" data-flow="answerer" id="arrow-qadetail-self"/>
+    </svg>
+
+    <!-- Arrow Labels -->
+    <!-- 1. トップ → Q&A一覧 -->
+    <div class="arrow-label" style="left:510px;top:278px;">Q&amp;A一覧へ</div>
+    <!-- 2. トップ → 新規登録 -->
+    <div class="arrow-label" style="left:170px;top:580px;">新規登録</div>
+    <!-- 3. トップ → ログイン -->
+    <div class="arrow-label" style="left:480px;top:580px;">ログイン</div>
+    <!-- 4. 新規登録 → ログイン -->
+    <div class="arrow-label success" style="left:510px;top:878px;">登録完了</div>
+    <!-- 5. ログイン → Q&A一覧 -->
+    <div class="arrow-label success" style="left:770px;top:500px;">ログイン成功</div>
+    <!-- 6. ログイン → PW再設定 -->
+    <div class="arrow-label" style="left:1110px;top:878px;">PW忘れ</div>
+    <!-- 7. PW再設定 → ログイン -->
+    <div class="arrow-label success" style="left:1110px;top:808px;">再設定完了</div>
+    <!-- 8. Q&A一覧 → Q&A詳細 -->
+    <div class="arrow-label" style="left:1110px;top:278px;">質問クリック</div>
+    <!-- 9. Q&A一覧 → 質問投稿 -->
+    <div class="arrow-label" style="left:590px;top:1000px;">質問する</div>
+    <!-- 10. Q&A詳細 → Q&A一覧 -->
+    <div class="arrow-label" style="left:1110px;top:390px;">一覧に戻る</div>
+    <!-- 11. Q&A詳細 → 質問投稿 -->
+    <div class="arrow-label" style="left:1050px;top:1000px;">新たに質問</div>
+    <!-- 12. 質問投稿 → Q&A詳細 -->
+    <div class="arrow-label ai-color" style="left:1050px;top:1100px;">AI回答表示</div>
+    <!-- 13. Q&A一覧 → マイページ -->
+    <div class="arrow-label" style="left:930px;top:1000px;">マイページ</div>
+    <!-- 14. マイページ → Q&A詳細 -->
+    <div class="arrow-label" style="left:1400px;top:1000px;">履歴から詳細</div>
+    <!-- 15. Q&A詳細 self-loop -->
+    <div class="arrow-label human-color" style="left:1620px;top:230px;">補足回答を投稿</div>
+
+    <!-- Section Labels -->
+    <div class="section-label" style="left:40px;top:60px;">
+      <i data-lucide="layout-grid" style="width:14px;height:14px;vertical-align:middle;margin-right:4px;"></i>
+      メインフロー: トップ → Q&amp;A一覧 → Q&amp;A詳細
+    </div>
+    <div class="section-label" style="left:40px;top:660px;">
+      <i data-lucide="shield" style="width:14px;height:14px;vertical-align:middle;margin-right:4px;"></i>
+      認証フロー: 新規登録 / ログイン / パスワード再設定
+    </div>
+    <div class="section-label" style="left:40px;top:1260px;">
+      <i data-lucide="lock" style="width:14px;height:14px;vertical-align:middle;margin-right:4px;"></i>
+      ログイン後機能: 質問投稿 / マイページ
+    </div>
+
+    <!-- ===== Screen Card 1: トップ ===== -->
+    <div class="screen-card" style="left:100px;top:100px;" data-screen="top" data-flow="questioner viewer" onclick="goToScreen('top')">
+      <div class="screen-card__header">
+        <div class="screen-card__title">
+          <span class="screen-card__num">1</span>
+          トップ
+        </div>
+        <span class="screen-card__badge screen-card__badge--public">公開</span>
+      </div>
+      <div class="screen-card__body">
+        <div class="mini-header">
+          <div class="mini-header__logo"><span class="mini-header__logo-icon">Q</span> 保険Q&amp;A</div>
+          <nav><a href="#">一覧</a><a href="#" class="btn-o">ログイン</a><a href="#" class="btn-p">登録</a></nav>
+        </div>
+        <div class="mini-main">
+          <div class="mini-hero">
+            <h3>保険の「困った」を、<br>AIとみんなで解決。</h3>
+            <p>損害保険の疑問をAIが即座に回答</p>
+            <div class="mini-ai-search">
+              <input placeholder="AIに質問してみよう...">
+              <button class="send-btn" aria-label="送信"></button>
+            </div>
+          </div>
+          <div class="mini-feature-pills">
+            <div class="mini-feature-pill">AI即時回答</div>
+            <div class="mini-feature-pill">専門家補足</div>
+            <div class="mini-feature-pill">カテゴリ検索</div>
+          </div>
+          <div class="mini-h2">最近のQ&amp;A</div>
+          <div class="mini-card">
+            <span class="mini-badge mini-badge--fire">火災保険</span>
+            <div class="mini-card-title">Q: 建築年割引の確認資料は？</div>
+            <div class="mini-card-text">A: 建物登記簿謄本または...</div>
+            <div class="mini-answer-dots">
+              <span class="mini-answer-dot mini-answer-dot--ai"></span>
+              <span class="mini-answer-dot mini-answer-dot--human"></span>
+              <span class="mini-answer-dot mini-answer-dot--human"></span>
+              <span class="mini-answer-count">3件の回答</span>
+            </div>
+          </div>
+          <div class="mini-card">
+            <span class="mini-badge mini-badge--auto">自動車保険</span>
+            <div class="mini-card-title">Q: 等級の引継ぎ条件は？</div>
+            <div class="mini-card-text">A: 同居親族間で可能...</div>
+            <div class="mini-answer-dots">
+              <span class="mini-answer-dot mini-answer-dot--ai"></span>
+              <span class="mini-answer-count">1件の回答</span>
+            </div>
+          </div>
+        </div>
+        <div class="mini-footer">保険Q&amp;A | お問い合わせ | 利用規約</div>
+      </div>
+    </div>
+
+    <!-- ===== Screen Card 5: Q&A一覧 ===== -->
+    <div class="screen-card" style="left:700px;top:100px;" data-screen="qalist" data-flow="questioner answerer viewer" onclick="goToScreen('qalist')">
+      <div class="screen-card__header">
+        <div class="screen-card__title">
+          <span class="screen-card__num">5</span>
+          Q&amp;A一覧
+        </div>
+        <span class="screen-card__badge screen-card__badge--public">公開</span>
+      </div>
+      <div class="screen-card__body">
+        <div class="mini-header">
+          <div class="mini-header__logo"><span class="mini-header__logo-icon">Q</span> 保険Q&amp;A</div>
+          <nav><a href="#" class="active-link">一覧</a><a href="#">質問</a><a href="#">マイ</a></nav>
+        </div>
+        <div class="mini-main">
+          <div class="mini-ai-search-standalone">
+            <input placeholder="AIに自然言語で質問...">
+            <button class="send-btn" aria-label="検索"></button>
+          </div>
+          <div class="mini-filter-tags">
+            <span class="mini-filter-tag active">すべて</span>
+            <span class="mini-filter-tag">火災保険</span>
+            <span class="mini-filter-tag">自動車保険</span>
+            <span class="mini-filter-tag">傷害保険</span>
+          </div>
+          <div class="mini-card">
+            <span class="mini-badge mini-badge--fire">火災保険</span>
+            <div class="mini-card-title">Q: 建築年割引の確認資料は？</div>
+            <div class="mini-card-text">A: 建物登記簿謄本または...</div>
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+              <div class="mini-answer-dots">
+                <span class="mini-answer-dot mini-answer-dot--ai"></span>
+                <span class="mini-answer-dot mini-answer-dot--human"></span>
+                <span class="mini-answer-dot mini-answer-dot--human"></span>
+                <span class="mini-answer-count">3件</span>
+              </div>
+              <div class="mini-meta">user01 | 2026/02/20</div>
+            </div>
+          </div>
+          <div class="mini-card">
+            <span class="mini-badge mini-badge--auto">自動車保険</span>
+            <div class="mini-card-title">Q: 等級の引継ぎ条件は？</div>
+            <div class="mini-card-text">A: 同居親族間で可能...</div>
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+              <div class="mini-answer-dots">
+                <span class="mini-answer-dot mini-answer-dot--ai"></span>
+                <span class="mini-answer-count">1件</span>
+              </div>
+              <div class="mini-meta">user02 | 2026/02/19</div>
+            </div>
+          </div>
+          <div class="mini-pagination">
+            <a href="#">&lt;</a><a href="#" class="current">1</a><a href="#">2</a><a href="#">3</a><a href="#">&gt;</a>
+          </div>
+        </div>
+        <div class="mini-footer">保険Q&amp;A | お問い合わせ | 利用規約</div>
+      </div>
+    </div>
+
+    <!-- ===== Screen Card 6: Q&A詳細 ===== -->
+    <div class="screen-card" style="left:1300px;top:100px;" data-screen="qadetail" data-flow="questioner answerer viewer" onclick="goToScreen('qadetail')">
+      <div class="screen-card__header">
+        <div class="screen-card__title">
+          <span class="screen-card__num">6</span>
+          Q&amp;A詳細
+        </div>
+        <span class="screen-card__badge screen-card__badge--public">公開</span>
+      </div>
+      <div class="screen-card__body">
+        <div class="mini-header">
+          <div class="mini-header__logo"><span class="mini-header__logo-icon">Q</span> 保険Q&amp;A</div>
+          <nav><a href="#">一覧</a><a href="#">質問</a><a href="#">マイ</a></nav>
+        </div>
+        <div class="mini-main">
+          <div class="mini-back">&larr; Q&amp;A一覧に戻る</div>
+          <!-- Question card -->
+          <div class="mini-card mini-q-card">
+            <span class="mini-badge mini-badge--fire">火災保険</span>
+            <div style="font-size:10px;font-weight:600;margin:4px 0;color:var(--color-text);">Q: 建築年割引の適用に必要な確認資料</div>
+            <div class="mini-card-text">火災保険の建築年割引を適用したい...</div>
+            <div class="mini-meta">user01 | 2026/02/20</div>
+          </div>
+          <!-- AI answer card -->
+          <div class="mini-card mini-a-card">
+            <div style="font-size:9px;font-weight:600;color:var(--color-ai);margin-bottom:4px;display:flex;align-items:center;gap:4px;">
+              <i data-lucide="bot" style="width:10px;height:10px;"></i>
+              AI回答
+            </div>
+            <div class="mini-card-text" style="color:var(--color-text);">
+              以下の書類が必要です:<br>
+              1. 建物登記簿謄本<br>
+              2. 建築確認書
+            </div>
+          </div>
+          <!-- Human answer cards -->
+          <div class="mini-card mini-human-card">
+            <div style="font-size:9px;font-weight:600;color:var(--color-human);margin-bottom:3px;display:flex;align-items:center;gap:4px;">
+              <div class="mini-avatar mini-avatar--sm mini-avatar--human">P</div>
+              専門家の補足
+            </div>
+            <div class="mini-card-text" style="color:var(--color-text);">
+              実務上は性能評価書も有効です。
+            </div>
+          </div>
+          <div class="mini-card mini-human-card">
+            <div style="font-size:9px;font-weight:600;color:var(--color-human);margin-bottom:3px;display:flex;align-items:center;gap:4px;">
+              <div class="mini-avatar mini-avatar--sm mini-avatar--human">K</div>
+              追加回答
+            </div>
+            <div class="mini-card-text" style="color:var(--color-text);">
+              各社で必要書類が異なる場合も...
+            </div>
+          </div>
+          <!-- Answer input area -->
+          <div class="mini-answer-input">
+            <div class="mini-answer-input-label">補足回答を投稿</div>
+            <textarea class="mini-answer-textarea" placeholder="回答を入力..."></textarea>
+            <button class="mini-answer-submit">投稿する</button>
+          </div>
+        </div>
+        <div class="mini-footer">保険Q&amp;A | お問い合わせ | 利用規約</div>
+      </div>
+    </div>
+
+    <!-- ===== Screen Card 2: 新規登録 ===== -->
+    <div class="screen-card" style="left:100px;top:700px;" data-screen="signup" data-flow="questioner" onclick="goToScreen('signup')">
+      <div class="screen-card__header">
+        <div class="screen-card__title">
+          <span class="screen-card__num">2</span>
+          新規登録
+        </div>
+        <span class="screen-card__badge screen-card__badge--public">公開</span>
+      </div>
+      <div class="screen-card__body">
+        <div class="mini-header">
+          <div class="mini-header__logo"><span class="mini-header__logo-icon">Q</span> 保険Q&amp;A</div>
+          <nav><a href="#">一覧</a><a href="#" class="btn-o">ログイン</a></nav>
+        </div>
+        <div class="mini-main" style="padding:14px 20px;">
+          <div class="mini-h1">新規登録</div>
+          <div class="mini-btn" style="background:var(--color-surface);color:var(--color-text);border:1px solid var(--color-border);font-size:9px;">Googleで登録</div>
+          <div style="text-align:center;font-size:8px;color:var(--color-text-muted);margin:6px 0;">または</div>
+          <div class="mini-label">メールアドレス</div>
+          <input class="mini-input" placeholder="example@mail.com">
+          <div class="mini-label">パスワード</div>
+          <input class="mini-input" type="password" placeholder="8文字以上">
+          <div class="mini-label">パスワード（確認）</div>
+          <input class="mini-input" type="password" placeholder="もう一度入力">
+          <div class="mini-btn mini-btn--primary">登録する</div>
+          <div class="mini-center" style="margin-top:4px;">
+            <span style="font-size:8px;">お持ちの方は </span><a href="#" class="mini-link">ログイン</a>
+          </div>
+        </div>
+        <div class="mini-footer">保険Q&amp;A | お問い合わせ | 利用規約</div>
+      </div>
+    </div>
+
+    <!-- ===== Screen Card 3: ログイン ===== -->
+    <div class="screen-card" style="left:700px;top:700px;" data-screen="login" data-flow="questioner answerer" onclick="goToScreen('login')">
+      <div class="screen-card__header">
+        <div class="screen-card__title">
+          <span class="screen-card__num">3</span>
+          ログイン
+        </div>
+        <span class="screen-card__badge screen-card__badge--public">公開</span>
+      </div>
+      <div class="screen-card__body">
+        <div class="mini-header">
+          <div class="mini-header__logo"><span class="mini-header__logo-icon">Q</span> 保険Q&amp;A</div>
+          <nav><a href="#">一覧</a><a href="#" class="btn-p">登録</a></nav>
+        </div>
+        <div class="mini-main" style="padding:14px 20px;">
+          <div class="mini-h1">ログイン</div>
+          <div class="mini-btn" style="background:var(--color-surface);color:var(--color-text);border:1px solid var(--color-border);font-size:9px;">Googleでログイン</div>
+          <div style="text-align:center;font-size:8px;color:var(--color-text-muted);margin:6px 0;">または</div>
+          <div class="mini-label">メールアドレス</div>
+          <input class="mini-input" placeholder="example@mail.com">
+          <div class="mini-label">パスワード</div>
+          <input class="mini-input" type="password" placeholder="パスワード">
+          <div class="mini-btn mini-btn--primary">ログイン</div>
+          <div class="mini-center" style="margin-top:4px;"><a href="#" class="mini-link">パスワードを忘れた方</a></div>
+          <div class="mini-center" style="margin-top:4px;">
+            <span style="font-size:8px;">お持ちでない方は </span><a href="#" class="mini-link">新規登録</a>
+          </div>
+        </div>
+        <div class="mini-footer">保険Q&amp;A | お問い合わせ | 利用規約</div>
+      </div>
+    </div>
+
+    <!-- ===== Screen Card 4: PW再設定 ===== -->
+    <div class="screen-card" style="left:1300px;top:700px;" data-screen="pwreset" data-flow="" onclick="goToScreen('pwreset')">
+      <div class="screen-card__header">
+        <div class="screen-card__title">
+          <span class="screen-card__num">4</span>
+          PW再設定
+        </div>
+        <span class="screen-card__badge screen-card__badge--public">公開</span>
+      </div>
+      <div class="screen-card__body">
+        <div class="mini-header">
+          <div class="mini-header__logo"><span class="mini-header__logo-icon">Q</span> 保険Q&amp;A</div>
+          <nav><a href="#">一覧</a><a href="#" class="btn-o">ログイン</a><a href="#" class="btn-p">登録</a></nav>
+        </div>
+        <div class="mini-main" style="padding:14px 20px;">
+          <div class="mini-h1">パスワード再設定</div>
+          <p style="text-align:center;font-size:8px;color:var(--color-text-muted);margin-bottom:10px;">
+            登録メールアドレスを入力してください。<br>再設定リンクを送信します。
+          </p>
+          <div class="mini-label">メールアドレス</div>
+          <input class="mini-input" placeholder="example@mail.com">
+          <div class="mini-btn mini-btn--primary">送信する</div>
+          <div class="mini-center" style="margin-top:6px;"><a href="#" class="mini-link">&larr; ログインに戻る</a></div>
+        </div>
+        <div class="mini-footer">保険Q&amp;A | お問い合わせ | 利用規約</div>
+      </div>
+    </div>
+
+    <!-- ===== Screen Card 7: 質問投稿 ===== -->
+    <div class="screen-card" style="left:400px;top:1300px;" data-screen="qpost" data-flow="questioner" onclick="goToScreen('qpost')">
+      <div class="screen-card__header">
+        <div class="screen-card__title">
+          <span class="screen-card__num">7</span>
+          質問投稿
+        </div>
+        <span class="screen-card__badge screen-card__badge--auth">要認証</span>
+      </div>
+      <div class="screen-card__body">
+        <div class="mini-header">
+          <div class="mini-header__logo"><span class="mini-header__logo-icon">Q</span> 保険Q&amp;A</div>
+          <nav><a href="#">一覧</a><a href="#" class="active-link">質問</a><a href="#">マイ</a></nav>
+        </div>
+        <div class="mini-main" style="padding:14px 18px;">
+          <div class="mini-h1">質問を投稿する</div>
+          <p style="text-align:center;font-size:8px;color:var(--color-text-muted);margin-bottom:8px;">AIが即座に回答 + 専門家が補足します</p>
+          <div class="mini-label">質問内容</div>
+          <textarea class="mini-textarea" placeholder="例: 建築年割引の適用に..."></textarea>
+          <div class="mini-suggestions">
+            <div class="mini-suggestions-title">
+              <i data-lucide="sparkles" style="width:8px;height:8px;"></i>
+              類似のQ&amp;A
+            </div>
+            <div class="mini-suggestion-item">建築年割引の確認資料は？</div>
+            <div class="mini-suggestion-item">性能評価書の取得方法は？</div>
+            <div class="mini-suggestion-item">割引の重複適用は可能？</div>
+          </div>
+          <div class="mini-btn mini-btn--ai">AIに質問する</div>
+        </div>
+        <div class="mini-footer">保険Q&amp;A | お問い合わせ | 利用規約</div>
+      </div>
+    </div>
+
+    <!-- ===== Screen Card 8: マイページ ===== -->
+    <div class="screen-card" style="left:1000px;top:1300px;" data-screen="mypage" data-flow="questioner answerer" onclick="goToScreen('mypage')">
+      <div class="screen-card__header">
+        <div class="screen-card__title">
+          <span class="screen-card__num">8</span>
+          マイページ
+        </div>
+        <span class="screen-card__badge screen-card__badge--auth">要認証</span>
+      </div>
+      <div class="screen-card__body">
+        <div class="mini-header">
+          <div class="mini-header__logo"><span class="mini-header__logo-icon">Q</span> 保険Q&amp;A</div>
+          <nav><a href="#">一覧</a><a href="#">質問</a><a href="#" class="active-link">マイ</a></nav>
+        </div>
+        <div class="mini-main">
+          <div class="mini-profile">
+            <div class="mini-avatar">U</div>
+            <div>
+              <div style="font-size:10px;font-weight:600;">user01</div>
+              <div style="font-size:8px;color:var(--color-text-muted);">test@example.com</div>
+              <div style="margin-top:2px;display:flex;gap:6px;">
+                <a href="#" class="mini-link" style="font-size:8px;">メール変更</a>
+                <a href="#" class="mini-link" style="font-size:8px;">PW変更</a>
+              </div>
+            </div>
+          </div>
+          <div class="mini-tab-bar">
+            <div class="mini-tab active">質問</div>
+            <div class="mini-tab">回答</div>
+          </div>
+          <div class="mini-card">
+            <span class="mini-badge mini-badge--fire">火災保険</span>
+            <div class="mini-card-title">Q: 建築年割引の確認資料は？</div>
+            <div class="mini-card-text">A: 建物登記簿謄本または...</div>
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+              <div class="mini-answer-dots">
+                <span class="mini-answer-dot mini-answer-dot--ai"></span>
+                <span class="mini-answer-dot mini-answer-dot--human"></span>
+                <span class="mini-answer-count">2件</span>
+              </div>
+              <div class="mini-meta">2026/02/20</div>
+            </div>
+          </div>
+          <div class="mini-card">
+            <span class="mini-badge mini-badge--auto">自動車保険</span>
+            <div class="mini-card-title">Q: 中断証明書の発行条件は？</div>
+            <div class="mini-card-text">A: 契約の満期日から...</div>
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+              <div class="mini-answer-dots">
+                <span class="mini-answer-dot mini-answer-dot--ai"></span>
+                <span class="mini-answer-count">1件</span>
+              </div>
+              <div class="mini-meta">2026/02/15</div>
+            </div>
+          </div>
+          <div class="mini-pagination">
+            <a href="#">&lt;</a><a href="#" class="current">1</a><a href="#">2</a><a href="#">&gt;</a>
+          </div>
+        </div>
+        <div class="mini-footer">保険Q&amp;A | お問い合わせ | 利用規約</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Zoom Controls -->
+<div class="zoom-controls" role="group" aria-label="ズーム操作">
+  <button class="zoom-btn" onclick="zoomIn()" aria-label="拡大">
+    <i data-lucide="plus" style="width:16px;height:16px;"></i>
+  </button>
+  <div class="zoom-level" id="zoomLevel">100%</div>
+  <button class="zoom-btn" onclick="zoomOut()" aria-label="縮小">
+    <i data-lucide="minus" style="width:16px;height:16px;"></i>
+  </button>
+  <button class="zoom-btn" onclick="fitToScreen()" aria-label="画面に合わせる" style="margin-top:4px;">
+    <i data-lucide="maximize-2" style="width:16px;height:16px;"></i>
+  </button>
+</div>
+
+<script>
+  // Initialize Lucide
+  document.addEventListener('DOMContentLoaded', function() {
+    if (typeof lucide !== 'undefined') {
+      lucide.createIcons();
+    }
+    fitToScreen();
+  });
+
+  // Navigate to index.html screen
+  function goToScreen(name) {
+    window.location.href = 'index.html#screen-' + name;
+  }
+
+  // ===== Pan & Zoom =====
+  var canvas = document.getElementById('canvas');
+  var container = document.getElementById('canvasContainer');
+  var scale = 1;
+  var panX = 0;
+  var panY = 0;
+  var isPanning = false;
+  var startX, startY;
+
+  function clampPan() {
+    var cw = container.clientWidth;
+    var ch = container.clientHeight;
+    var canvasW = 2400 * scale;
+    var canvasH = 2100 * scale;
+    var margin = Math.min(200, Math.min(cw, ch) / 4);
+    panX = Math.max(-canvasW + margin, Math.min(cw - margin, panX));
+    panY = Math.max(-canvasH + margin, Math.min(ch - margin, panY));
+  }
+
+  function updateTransform() {
+    clampPan();
+    canvas.style.transform = 'translate(' + panX + 'px, ' + panY + 'px) scale(' + scale + ')';
+    document.getElementById('zoomLevel').textContent = Math.round(scale * 100) + '%';
+  }
+
+  function zoomIn() {
+    scale = Math.min(scale * 1.2, 2);
+    updateTransform();
+  }
+  function zoomOut() {
+    scale = Math.max(scale / 1.2, 0.3);
+    updateTransform();
+  }
+  function fitToScreen() {
+    var cw = container.clientWidth;
+    var ch = container.clientHeight;
+    var canvasW = 2400;
+    var canvasH = 2100;
+    var sx = cw / canvasW;
+    var sy = ch / canvasH;
+    scale = Math.min(sx, sy, 1) * 0.92;
+    panX = (cw - canvasW * scale) / 2;
+    panY = (ch - canvasH * scale) / 2;
+    updateTransform();
+  }
+
+  // Mouse pan
+  container.addEventListener('mousedown', function(e) {
+    if (e.target.closest('.screen-card')) return;
+    isPanning = true;
+    startX = e.clientX - panX;
+    startY = e.clientY - panY;
+    container.style.cursor = 'grabbing';
+  });
+  document.addEventListener('mousemove', function(e) {
+    if (!isPanning) return;
+    panX = e.clientX - startX;
+    panY = e.clientY - startY;
+    updateTransform();
+  });
+  document.addEventListener('mouseup', function() {
+    isPanning = false;
+    container.style.cursor = 'grab';
+  });
+
+  // Mouse wheel zoom
+  container.addEventListener('wheel', function(e) {
+    e.preventDefault();
+    var delta = e.deltaY > 0 ? 0.9 : 1.1;
+    var newScale = Math.max(0.3, Math.min(2, scale * delta));
+
+    // Zoom towards mouse position
+    var rect = container.getBoundingClientRect();
+    var mx = e.clientX - rect.left;
+    var my = e.clientY - rect.top;
+    var ratio = newScale / scale;
+    panX = mx - ratio * (mx - panX);
+    panY = my - ratio * (my - panY);
+    scale = newScale;
+    updateTransform();
+  }, { passive: false });
+
+  // Touch pan (mobile)
+  var touchStartX, touchStartY;
+  container.addEventListener('touchstart', function(e) {
+    if (e.touches.length === 1 && !e.target.closest('.screen-card')) {
+      touchStartX = e.touches[0].clientX - panX;
+      touchStartY = e.touches[0].clientY - panY;
+    }
+  }, { passive: true });
+  container.addEventListener('touchmove', function(e) {
+    if (e.touches.length === 1) {
+      panX = e.touches[0].clientX - touchStartX;
+      panY = e.touches[0].clientY - touchStartY;
+      updateTransform();
+    }
+  }, { passive: true });
+
+  // ===== Flow Highlighting (3 flows) =====
+  var currentFlow = null;
+
+  // Define which screens belong to each flow
+  var flowScreens = {
+    questioner: ['top', 'signup', 'login', 'pwreset', 'qalist', 'qpost', 'qadetail', 'mypage'],
+    answerer: ['login', 'qalist', 'qadetail', 'mypage'],
+    viewer: ['top', 'qalist', 'qadetail']
+  };
+
+  // Define which arrows belong to each flow
+  var flowArrows = {
+    questioner: ['arrow-top-qalist', 'arrow-top-signup', 'arrow-top-login', 'arrow-signup-login', 'arrow-login-qalist', 'arrow-login-pwreset', 'arrow-pwreset-login', 'arrow-qalist-qadetail', 'arrow-qalist-qpost', 'arrow-qpost-qadetail', 'arrow-qadetail-qpost', 'arrow-qalist-mypage', 'arrow-mypage-qadetail'],
+    answerer: ['arrow-login-qalist', 'arrow-qalist-qadetail', 'arrow-qadetail-self', 'arrow-qalist-mypage', 'arrow-mypage-qadetail'],
+    viewer: ['arrow-top-qalist', 'arrow-qalist-qadetail', 'arrow-qadetail-qalist']
+  };
+
+  function highlightFlow(flow) {
+    var btnQ = document.getElementById('btnFlowQuestioner');
+    var btnA = document.getElementById('btnFlowAnswerer');
+    var btnV = document.getElementById('btnFlowViewer');
+
+    if (currentFlow === flow) {
+      // Toggle off
+      currentFlow = null;
+      btnQ.classList.remove('active-accent');
+      btnQ.setAttribute('aria-pressed', 'false');
+      btnA.classList.remove('active-human');
+      btnA.setAttribute('aria-pressed', 'false');
+      btnV.classList.remove('active');
+      btnV.setAttribute('aria-pressed', 'false');
+      clearHighlights();
+      return;
+    }
+
+    currentFlow = flow;
+
+    // Reset all button states
+    btnQ.classList.remove('active-accent');
+    btnQ.setAttribute('aria-pressed', 'false');
+    btnA.classList.remove('active-human');
+    btnA.setAttribute('aria-pressed', 'false');
+    btnV.classList.remove('active');
+    btnV.setAttribute('aria-pressed', 'false');
+
+    // Set active button
+    if (flow === 'questioner') {
+      btnQ.classList.add('active-accent');
+      btnQ.setAttribute('aria-pressed', 'true');
+    } else if (flow === 'answerer') {
+      btnA.classList.add('active-human');
+      btnA.setAttribute('aria-pressed', 'true');
+    } else if (flow === 'viewer') {
+      btnV.classList.add('active');
+      btnV.setAttribute('aria-pressed', 'true');
+    }
+
+    var highlightClass = 'highlight-' + flow;
+    var markerMap = {
+      questioner: 'url(#arrowhead-accent)',
+      answerer: 'url(#arrowhead-human)',
+      viewer: 'url(#arrowhead-primary)'
+    };
+    var markerUrl = markerMap[flow];
+
+    // Reset all
+    clearHighlights();
+
+    // Highlight matching cards
+    var activeScreens = flowScreens[flow] || [];
+    document.querySelectorAll('.screen-card').forEach(function(card) {
+      var screen = card.getAttribute('data-screen');
+      if (activeScreens.indexOf(screen) >= 0) {
+        card.classList.add(highlightClass);
+      } else {
+        card.style.opacity = '0.4';
+      }
+    });
+
+    // Highlight matching arrows
+    var activeArrows = flowArrows[flow] || [];
+    document.querySelectorAll('#arrowsSvg path[data-flow]').forEach(function(path) {
+      if (activeArrows.indexOf(path.id) >= 0) {
+        path.classList.add(highlightClass);
+        path.setAttribute('marker-end', markerUrl);
+      } else {
+        path.style.opacity = '0.15';
+      }
+    });
+  }
+
+  function clearHighlights() {
+    document.querySelectorAll('.screen-card').forEach(function(card) {
+      card.classList.remove('highlight-questioner', 'highlight-answerer', 'highlight-viewer');
+      card.style.opacity = '';
+    });
+    document.querySelectorAll('#arrowsSvg path[data-flow]').forEach(function(path) {
+      path.classList.remove('highlight-questioner', 'highlight-answerer', 'highlight-viewer');
+      path.style.opacity = '';
+      // Reset markers to defaults
+      if (path.id === 'arrow-signup-login' || path.id === 'arrow-login-qalist' || path.id === 'arrow-pwreset-login' || path.id === 'arrow-qpost-qadetail') {
+        path.setAttribute('marker-end', 'url(#arrowhead-success)');
+      } else if (path.id === 'arrow-qadetail-self') {
+        path.setAttribute('marker-end', 'url(#arrowhead-human)');
+      } else {
+        path.setAttribute('marker-end', 'url(#arrowhead)');
+      }
+    });
+  }
+
+  // Keyboard shortcuts
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+      currentFlow = null;
+      document.getElementById('btnFlowQuestioner').classList.remove('active-accent');
+      document.getElementById('btnFlowQuestioner').setAttribute('aria-pressed', 'false');
+      document.getElementById('btnFlowAnswerer').classList.remove('active-human');
+      document.getElementById('btnFlowAnswerer').setAttribute('aria-pressed', 'false');
+      document.getElementById('btnFlowViewer').classList.remove('active');
+      document.getElementById('btnFlowViewer').setAttribute('aria-pressed', 'false');
+      clearHighlights();
+    }
+    // + / - for zoom
+    if (e.key === '+' || e.key === '=') zoomIn();
+    if (e.key === '-') zoomOut();
+    if (e.key === '0') fitToScreen();
+  });
+
+  // Window resize handler
+  window.addEventListener('resize', function() {
+    fitToScreen();
+  });
+</script>
+
+</body>
+</html>

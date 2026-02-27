@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>保険Q&A - 画面遷移図</title>
+  <script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --color-primary: #4A7C9B;
+      --color-primary-dark: #3A6280;
+      --color-primary-light: #6A9CBB;
+      --color-bg: #F7F5F2;
+      --color-surface: #FFFFFF;
+      --color-text: #2D3748;
+      --color-text-secondary: #718096;
+      --color-text-muted: #A0AEC0;
+      --color-border: #E2E8F0;
+      --color-border-light: #EDF2F7;
+      --color-success: #38A169;
+      --color-success-bg: #F0FFF4;
+      --color-danger: #E53E3E;
+      --color-danger-bg: #FFF5F5;
+      --color-ai: #38A169;
+      --color-ai-bg: #F0FFF4;
+      --color-human: #C05621;
+      --color-human-bg: #FFFAF0;
+      --cat-fire: #E8734A;
+      --cat-auto: #4A7C9B;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Noto Sans JP', sans-serif; background: var(--color-bg); color: var(--color-text); width: 7400px; height: 2500px; position: relative; overflow: visible; }
+
+    /* ===== Title Banner ===== */
+    .title-banner { position: absolute; left: 0; top: 0; width: 7400px; height: 90px; background: var(--color-primary); display: flex; align-items: center; padding: 0 50px; gap: 16px; }
+    .title-banner .logo { width: 48px; height: 48px; background: rgba(255,255,255,0.2); color: #fff; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: 700; }
+    .title-banner h1 { color: #fff; font-size: 26px; font-weight: 700; }
+
+    /* ===== Section Headers ===== */
+    .section-header { position: absolute; }
+    .section-header h2 { font-size: 20px; font-weight: 700; color: var(--color-text); margin-bottom: 8px; }
+    .section-header p { font-size: 12px; color: var(--color-text-secondary); line-height: 1.6; max-width: 800px; }
+
+    /* ===== Section 1: Screen boxes ===== */
+    .screen-box { position: absolute; width: 360px; height: 100px; background: #E8E8E8; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 600; color: var(--color-text); text-align: center; line-height: 1.4; }
+
+    /* ===== Section 2: Flow boxes ===== */
+    .flow-box { position: absolute; width: 220px; padding: 14px 12px; border-radius: 10px; font-size: 13px; font-weight: 600; text-align: center; color: var(--color-text); }
+    .flow-box--header { background: #FFF3CD; border: 2px solid #F0D58C; }
+    .flow-box--auth { background: #D4EDDA; border: 2px solid #A3D9B1; }
+    .flow-box--page { background: #E8E8E8; border: 2px solid #CCCCCC; }
+    .flow-box--info { background: #D5F5E3; border: 2px solid #82E0AA; }
+    .flow-label { position: absolute; font-size: 11px; font-weight: 600; background: var(--color-surface); border: 1px solid var(--color-border-light); padding: 2px 8px; border-radius: 6px; white-space: nowrap; z-index: 10; }
+    .flow-label.green { color: var(--color-success); }
+    .flow-label.human-color { color: var(--color-human); }
+    .flow-legend { position: absolute; background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 10px; padding: 14px 18px; display: flex; flex-direction: column; gap: 8px; }
+    .flow-legend-title { font-size: 11px; font-weight: 700; color: var(--color-text-muted); text-transform: uppercase; }
+    .flow-legend-item { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--color-text-secondary); }
+    .flow-legend-dot { width: 20px; height: 14px; border-radius: 4px; }
+
+    /* ===== Section 3: Screen Cards ===== */
+    .screen-card { position: absolute; width: 360px; background: var(--color-surface); border: 2px solid var(--color-border); border-radius: 16px; box-shadow: 0 4px 6px rgba(0,0,0,0.07); overflow: hidden; z-index: 5; }
+    .screen-card__header { display: flex; justify-content: space-between; align-items: center; padding: 10px 14px; background: var(--color-bg); border-bottom: 1px solid var(--color-border-light); }
+    .screen-card__title { font-size: 14px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+    .screen-card__num { display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; border-radius: 50%; background: var(--color-primary); color: #fff; font-size: 12px; font-weight: 700; }
+    .screen-card__badge { font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 999px; }
+    .screen-card__badge--public { background: var(--color-success-bg); color: var(--color-success); }
+    .screen-card__badge--auth { background: var(--color-danger-bg); color: var(--color-danger); }
+    .arrow-label { position: absolute; font-size: 11px; font-weight: 600; color: var(--color-text); background: var(--color-surface); border: 1px solid var(--color-border-light); padding: 2px 8px; border-radius: 6px; white-space: nowrap; z-index: 10; }
+    .arrow-label.success { color: var(--color-success); }
+    .arrow-label.ai-color { color: var(--color-ai); }
+    .arrow-label.human-color { color: var(--color-human); }
+
+    /* Mini wireframe */
+    .mini-header { background: var(--color-primary-dark); color: #fff; padding: 8px 12px; display: flex; justify-content: space-between; align-items: center; }
+    .mini-header__logo { font-weight: 700; font-size: 12px; display: flex; align-items: center; gap: 4px; }
+    .mini-header__logo-icon { width: 18px; height: 18px; background: rgba(255,255,255,0.2); border-radius: 3px; display: inline-flex; align-items: center; justify-content: center; font-size: 9px; }
+    .mini-header nav { display: flex; gap: 4px; }
+    .mini-header nav a { color: rgba(255,255,255,0.85); font-size: 9px; padding: 3px 6px; border-radius: 3px; text-decoration: none; }
+    .mini-header nav a.active-link { color: #fff; font-weight: 600; border-bottom: 1px solid #fff; }
+    .mini-header nav a.btn-p { background: rgba(255,255,255,0.2); color: #fff; }
+    .mini-header nav a.btn-o { border: 1px solid rgba(255,255,255,0.4); color: rgba(255,255,255,0.9); }
+    .mini-main { padding: 12px; background: var(--color-bg); }
+    .mini-footer { background: var(--color-text); color: #CBD5E0; padding: 6px; text-align: center; font-size: 8px; }
+    .mini-h1 { font-size: 14px; text-align: center; margin-bottom: 10px; font-weight: 700; }
+    .mini-h2 { font-size: 11px; margin-bottom: 6px; font-weight: 600; }
+    .mini-input { width: 100%; padding: 6px 8px; border: 1.5px solid var(--color-border); border-radius: 6px; font-size: 10px; margin-bottom: 6px; background: #fff; }
+    .mini-label { font-size: 10px; font-weight: 600; margin-bottom: 2px; display: block; color: var(--color-text-secondary); }
+    .mini-textarea { width: 100%; padding: 6px 8px; border: 1.5px solid var(--color-border); border-radius: 6px; font-size: 10px; height: 50px; background: #fff; margin-bottom: 6px; }
+    .mini-btn { display: block; width: 100%; padding: 8px; border: none; border-radius: 6px; font-size: 11px; font-weight: 600; color: #fff; text-align: center; margin-bottom: 6px; }
+    .mini-btn--primary { background: var(--color-primary); }
+    .mini-btn--ai { background: var(--color-ai); }
+    .mini-link { color: var(--color-primary); font-size: 10px; text-decoration: none; }
+    .mini-center { text-align: center; }
+    .mini-card { background: #fff; border: 1px solid var(--color-border-light); border-radius: 6px; padding: 8px; margin-bottom: 6px; }
+    .mini-badge { display: inline-block; padding: 2px 6px; border-radius: 999px; font-size: 9px; font-weight: 600; }
+    .mini-badge--fire { background: rgba(232,115,74,0.12); color: var(--cat-fire); }
+    .mini-badge--auto { background: rgba(74,124,155,0.12); color: var(--cat-auto); }
+    .mini-card-title { font-size: 10px; font-weight: 600; margin: 3px 0 2px; }
+    .mini-card-text { font-size: 9px; color: var(--color-text-muted); line-height: 1.3; }
+    .mini-meta { font-size: 8px; color: var(--color-text-muted); margin-top: 3px; }
+    .mini-hero { background: linear-gradient(135deg, var(--color-primary-dark), var(--color-primary-light)); color: #fff; padding: 14px 10px; border-radius: 8px; text-align: center; margin-bottom: 10px; }
+    .mini-hero h3 { font-size: 12px; margin-bottom: 4px; }
+    .mini-hero p { font-size: 9px; opacity: 0.9; margin-bottom: 8px; }
+    .mini-ai-search { display: flex; background: #fff; border-radius: 999px; overflow: hidden; border: 2px solid rgba(255,255,255,0.3); }
+    .mini-ai-search input { flex: 1; padding: 5px 10px; border: none; font-size: 9px; outline: none; }
+    .mini-ai-search .send-btn { width: 28px; height: 28px; background: var(--color-ai); border: none; color: #fff; font-size: 10px; }
+    .mini-ai-search-standalone { display: flex; background: #fff; border-radius: 999px; overflow: hidden; border: 1.5px solid var(--color-border); margin-bottom: 8px; }
+    .mini-ai-search-standalone input { flex: 1; padding: 5px 10px; border: none; font-size: 9px; outline: none; }
+    .mini-ai-search-standalone .send-btn { width: 26px; height: 26px; background: var(--color-ai); border: none; border-radius: 50%; margin: 2px; color: #fff; font-size: 9px; }
+    .mini-feature-pills { display: flex; gap: 4px; margin-bottom: 10px; justify-content: center; }
+    .mini-feature-pill { padding: 3px 8px; background: #fff; border: 1px solid var(--color-border); border-radius: 6px; font-size: 8px; font-weight: 600; color: var(--color-text-secondary); }
+    .mini-answer-dots { display: flex; gap: 3px; align-items: center; margin-top: 3px; }
+    .mini-answer-dot { width: 8px; height: 8px; border-radius: 50%; }
+    .mini-answer-dot--ai { background: var(--color-ai); }
+    .mini-answer-dot--human { background: var(--color-human); }
+    .mini-answer-count { font-size: 8px; color: var(--color-text-muted); }
+    .mini-filter-tags { display: flex; gap: 3px; margin-bottom: 8px; }
+    .mini-filter-tag { padding: 2px 6px; border-radius: 999px; font-size: 8px; font-weight: 600; border: 1px solid var(--color-border); background: #fff; color: var(--color-text-secondary); }
+    .mini-filter-tag.active { background: var(--color-primary); color: #fff; border-color: var(--color-primary); }
+    .mini-pagination { display: flex; justify-content: center; gap: 3px; margin-top: 8px; }
+    .mini-pagination span { padding: 2px 6px; border: 1px solid var(--color-border); border-radius: 3px; font-size: 9px; color: var(--color-text-secondary); }
+    .mini-pagination span.current { background: var(--color-primary); color: #fff; border-color: var(--color-primary); }
+    .mini-profile { display: flex; align-items: center; gap: 8px; background: #fff; border: 1px solid var(--color-border-light); border-radius: 6px; padding: 8px; margin-bottom: 8px; }
+    .mini-avatar { width: 30px; height: 30px; background: linear-gradient(135deg, var(--color-primary), var(--color-primary-light)); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 12px; font-weight: 700; }
+    .mini-avatar--sm { width: 18px; height: 18px; font-size: 8px; }
+    .mini-avatar--human { background: linear-gradient(135deg, var(--color-human), #DD6B20); }
+    .mini-back { font-size: 10px; color: var(--color-primary); display: inline-block; margin-bottom: 6px; }
+    .mini-q-card { border-left: 3px solid var(--color-primary); }
+    .mini-a-card { border-left: 3px solid var(--color-ai); background: var(--color-ai-bg); }
+    .mini-human-card { border-left: 3px solid var(--color-human); background: var(--color-human-bg); }
+    .mini-tab-bar { display: flex; margin-bottom: 8px; border: 1px solid var(--color-border); border-radius: 6px; overflow: hidden; }
+    .mini-tab { flex: 1; padding: 4px 8px; font-size: 10px; font-weight: 600; text-align: center; background: #fff; color: var(--color-text-secondary); border-right: 1px solid var(--color-border); }
+    .mini-tab:last-child { border-right: none; }
+    .mini-tab.active { background: var(--color-primary); color: #fff; }
+    .mini-suggestions { background: var(--color-ai-bg); border: 1px solid rgba(56,161,105,0.2); border-radius: 6px; padding: 6px; margin-bottom: 6px; }
+    .mini-suggestions-title { font-size: 9px; font-weight: 600; color: var(--color-ai); margin-bottom: 4px; }
+    .mini-suggestion-item { font-size: 8px; color: var(--color-text-secondary); padding: 2px 0; border-bottom: 1px solid rgba(56,161,105,0.1); }
+    .mini-suggestion-item:last-child { border-bottom: none; }
+    .mini-answer-input { background: #fff; border: 1.5px solid var(--color-border); border-radius: 6px; padding: 6px; margin-top: 6px; }
+    .mini-answer-input-label { font-size: 9px; font-weight: 600; color: var(--color-human); margin-bottom: 3px; }
+    .mini-answer-textarea { width: 100%; height: 24px; border: 1px solid var(--color-border-light); border-radius: 3px; font-size: 8px; padding: 3px 5px; margin-bottom: 3px; }
+    .mini-answer-submit { display: inline-block; padding: 3px 10px; background: var(--color-human); color: #fff; border: none; border-radius: 3px; font-size: 8px; font-weight: 600; }
+  </style>
+</head>
+<body>
+
+<!-- ===== Title Banner ===== -->
+<div class="title-banner">
+  <div class="logo">Q</div>
+  <h1>保険Q&A 画面遷移図 ─ AI+人間ハイブリッド回答モデル</h1>
+</div>
+
+<!-- ============================================================ -->
+<!--  Section ①: 想定される画面（機能）の書き起こし               -->
+<!-- ============================================================ -->
+<div class="section-header" style="left:60px;top:120px;">
+  <h2>①想定される画面（機能）の書き起こし</h2>
+  <p>MVPで必要な全ページを書き起こしたもの。全10画面。</p>
+</div>
+
+<!-- Row 1 -->
+<div class="screen-box" style="left:60px;top:210px;">1. トップページ</div>
+<div class="screen-box" style="left:460px;top:210px;">2. 新規登録ページ</div>
+<div class="screen-box" style="left:860px;top:210px;">3. ログインページ</div>
+<div class="screen-box" style="left:1260px;top:210px;">4. パスワード再設定ページ</div>
+<!-- Row 2 -->
+<div class="screen-box" style="left:60px;top:340px;">5. Q&A一覧ページ</div>
+<div class="screen-box" style="left:460px;top:340px;">6. Q&A詳細ページ</div>
+<div class="screen-box" style="left:860px;top:340px;">7. 質問投稿ページ<br><span style="font-size:11px;color:var(--color-danger);">（要認証）</span></div>
+<div class="screen-box" style="left:1260px;top:340px;">8. マイページ<br><span style="font-size:11px;color:var(--color-danger);">（要認証）</span></div>
+<!-- Row 3 -->
+<div class="screen-box" style="left:60px;top:470px;">9. 利用規約ページ</div>
+<div class="screen-box" style="left:460px;top:470px;">10. プライバシーポリシーページ</div>
+
+<!-- 注釈: 未ログインでも閲覧可能 -->
+<div style="position:absolute;left:60px;top:610px;font-size:13px;font-weight:600;color:var(--color-text-secondary);">
+  ■ 未ログインでも閲覧・利用できるページ: トップ / Q&A一覧 / Q&A詳細 / 新規登録 / ログイン / PW再設定 / 利用規約 / プライバシーポリシー
+</div>
+<div style="position:absolute;left:60px;top:640px;font-size:13px;font-weight:600;color:var(--color-text-secondary);">
+  ■ ログイン必須のページ: 質問投稿 / マイページ
+</div>
+
+
+<!-- ============================================================ -->
+<!--  Section ②: 各画面（機能）のつながりを整理                  -->
+<!-- ============================================================ -->
+<div class="section-header" style="left:1800px;top:120px;">
+  <h2>②各画面（機能）のつながりを整理</h2>
+  <p>ユーザーの体験の流れに沿って、画面間の遷移を整理したもの。<br>矢印と一緒に遷移時の挙動もメモ。</p>
+</div>
+
+<!-- ================================================ -->
+<!-- Flow Diagram: Vertical layout, main page on left -->
+<!-- ================================================ -->
+
+<!--
+  Layout grid (absolute positions):
+  ┌──────────────────────────────────────────────────────────────────────────┐
+  │  トップページ (1870,210) → Q&A一覧 (2200,210) → Q&A詳細 (2530,210)    │  Row 1: メインフロー
+  │       ↓                                                                │
+  │  新規登録 (2200,370)  →  ログイン (2530,370)  →  PW再設定 (2860,370)  │  Row 2: 認証フロー
+  │       ↓                                                                │
+  │  質問投稿 (2200,530)                                                   │  Row 3: 投稿（要認証）
+  │       ↓                                                                │
+  │  マイページ (2200,690)                                                 │  Row 4: マイページ（要認証）
+  │       ↓                                                                │
+  │  利用規約 (2200,850)                                                   │  Row 5: フッターリンク
+  │       ↓                                                                │
+  │  プライバシーポリシー (2200,960)                                       │  Row 6: フッターリンク
+  └──────────────────────────────────────────────────────────────────────────┘
+-->
+
+<!-- Flow Legend (bottom-left, matching Figma sample placement) -->
+<div class="flow-legend" style="left:1800px;top:1080px;">
+  <div class="flow-legend-title">凡例</div>
+  <div class="flow-legend-item"><div class="flow-legend-dot" style="background:#FFF3CD;border:2px solid #F0D58C;"></div>ヘッダーからアクセス可</div>
+  <div class="flow-legend-item"><div class="flow-legend-dot" style="background:#D4EDDA;border:2px solid #A3D9B1;"></div>認証関連</div>
+  <div class="flow-legend-item"><div class="flow-legend-dot" style="background:#E8E8E8;border:2px solid #CCC;"></div>その他（一般ページ）</div>
+  <div class="flow-legend-item"><div class="flow-legend-dot" style="background:#D5F5E3;border:2px solid #82E0AA;"></div>フッターからアクセス可</div>
+</div>
+
+<!-- Flow boxes -->
+<!-- Row 1: メインフロー -->
+<div class="flow-box flow-box--header" style="left:1870px;top:210px;">トップページ</div>
+<div class="flow-box flow-box--header" style="left:2200px;top:210px;">Q&A一覧ページ</div>
+<div class="flow-box flow-box--page" style="left:2530px;top:210px;">Q&A詳細ページ</div>
+
+<!-- Row 2: 認証フロー -->
+<div class="flow-box flow-box--auth" style="left:2200px;top:370px;">新規登録ページ</div>
+<div class="flow-box flow-box--auth" style="left:2530px;top:370px;">ログインページ</div>
+<div class="flow-box flow-box--auth" style="left:2860px;top:370px;">PW再設定ページ</div>
+
+<!-- Row 3: 投稿（要認証） -->
+<div class="flow-box flow-box--header" style="left:2200px;top:530px;">質問投稿ページ<br><span style="font-size:10px;">（要認証）</span></div>
+
+<!-- Row 4: マイページ（要認証） -->
+<div class="flow-box flow-box--header" style="left:2200px;top:690px;">マイページ<br><span style="font-size:10px;">（要認証）</span></div>
+
+<!-- Row 5-6: フッターリンク -->
+<div class="flow-box flow-box--info" style="left:2200px;top:850px;">利用規約ページ</div>
+<div class="flow-box flow-box--info" style="left:2200px;top:960px;">プライバシーポリシーページ</div>
+
+<!-- Flow SVG arrows -->
+<svg style="position:absolute;left:1800px;top:0;width:1500px;height:1100px;pointer-events:none;z-index:2;" viewBox="0 0 1500 1100" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <marker id="fah" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#718096"/></marker>
+    <marker id="fah-g" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#38A169"/></marker>
+    <marker id="fah-h" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#C05621"/></marker>
+  </defs>
+
+  <!-- ===== Row 1: メインフロー (horizontal) ===== -->
+  <!-- トップ(right:290) → Q&A一覧(left:400) -->
+  <line x1="290" y1="232" x2="398" y2="232" stroke="#718096" stroke-width="2" marker-end="url(#fah)"/>
+  <!-- Q&A一覧(right:620) → Q&A詳細(left:730) -->
+  <line x1="620" y1="232" x2="728" y2="232" stroke="#718096" stroke-width="2" marker-end="url(#fah)"/>
+
+  <!-- ===== トップ → 各行 (vertical from left side of トップ, L-shaped connectors) ===== -->
+  <!-- トップ(bottom-left) → 新規登録行 -->
+  <path d="M180,255 L180,392 L398,392" stroke="#718096" stroke-width="2" fill="none" marker-end="url(#fah)"/>
+  <!-- トップ → 質問投稿行 -->
+  <path d="M160,255 L160,555 L398,555" stroke="#718096" stroke-width="2" fill="none" marker-end="url(#fah)"/>
+  <!-- トップ → マイページ行 -->
+  <path d="M140,255 L140,715 L398,715" stroke="#718096" stroke-width="2" fill="none" marker-end="url(#fah)"/>
+  <!-- トップ → 利用規約行 -->
+  <path d="M120,255 L120,872 L398,872" stroke="#718096" stroke-width="2" fill="none" marker-end="url(#fah)"/>
+  <!-- トップ → プライバシーポリシー行 -->
+  <path d="M100,255 L100,982 L398,982" stroke="#718096" stroke-width="2" fill="none" marker-end="url(#fah)"/>
+
+  <!-- ===== Row 2: 認証フロー (horizontal) ===== -->
+  <!-- 新規登録(right:620) → ログイン(left:730) -->
+  <line x1="620" y1="397" x2="728" y2="397" stroke="#718096" stroke-width="2" marker-end="url(#fah)"/>
+  <!-- ログイン(right:950) → PW再設定(left:1060) -->
+  <line x1="950" y1="397" x2="1058" y2="397" stroke="#718096" stroke-width="2" marker-end="url(#fah)"/>
+  <!-- PW再設定 → ログイン (return, offset above) -->
+  <line x1="1060" y1="383" x2="952" y2="383" stroke="#38A169" stroke-width="2" marker-end="url(#fah-g)"/>
+
+  <!-- ===== 認証後の遷移 ===== -->
+  <!-- ログイン成功 → Q&A一覧 (vertical up) -->
+  <line x1="840" y1="370" x2="840" y2="258" stroke="#38A169" stroke-width="2" marker-end="url(#fah-g)"/>
+
+  <!-- ===== Row 3: 質問投稿 → Q&A詳細 ===== -->
+  <!-- 質問投稿 → Q&A詳細 (投稿完了後に遷移: right, up, right) -->
+  <path d="M620,550 L680,550 L680,240 L728,240" stroke="#38A169" stroke-width="2" fill="none" marker-end="url(#fah-g)"/>
+
+  <!-- ===== Q&A詳細 self-loop (補足回答): arc on right side ===== -->
+  <path d="M952,225 C1000,210 1000,255 952,245" stroke="#C05621" stroke-width="2" fill="none" marker-end="url(#fah-h)"/>
+</svg>
+
+<!-- Flow labels -->
+<!-- Row 1 horizontal arrows -->
+<div class="flow-label" style="left:2110px;top:215px;">Q&A一覧へ</div>
+<div class="flow-label" style="left:2440px;top:215px;">質問クリック</div>
+<!-- Row 2 horizontal arrows -->
+<div class="flow-label green" style="left:2440px;top:405px;">登録完了</div>
+<div class="flow-label" style="left:2770px;top:405px;">PW忘れ</div>
+<div class="flow-label green" style="left:2770px;top:358px;">再設定完了</div>
+<!-- ログイン成功 vertical arrow -->
+<div class="flow-label green" style="left:2650px;top:308px;">ログイン成功</div>
+<!-- 投稿完了 return arrow -->
+<div class="flow-label green" style="left:2490px;top:478px;">投稿後 AI回答表示</div>
+<!-- Q&A詳細 self-loop -->
+<div class="flow-label human-color" style="left:2790px;top:222px;">補足回答</div>
+<!-- Vertical arrows from トップ -->
+<div class="flow-label" style="left:1908px;top:320px;">新規登録</div>
+<div class="flow-label" style="left:1908px;top:490px;">質問する</div>
+<div class="flow-label" style="left:1908px;top:650px;">マイページ</div>
+<div class="flow-label" style="left:1908px;top:830px;">フッターリンク</div>
+<div class="flow-label" style="left:1908px;top:942px;">フッターリンク</div>
+
+
+<!-- ============================================================ -->
+<!--  Section ③: 各画面の内容とつながりを整理                     -->
+<!-- ============================================================ -->
+<div class="section-header" style="left:3400px;top:120px;">
+  <h2>③各画面（機能）の内容とつながりを整理</h2>
+  <p>②の図を元に、各画面の見せ方を書き出して整理。ボタン・フォーム等のUI要素を含むワイヤーフレーム。<br>主要な遷移のみ矢印で表示（全遷移は②を参照）。</p>
+</div>
+
+<!-- Section 3 SVG arrows (simplified - only essential transitions) -->
+<svg style="position:absolute;left:3400px;top:0;width:3800px;height:2500px;pointer-events:none;z-index:2;" viewBox="0 0 3800 2500" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <marker id="ah3" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><path d="M0,0 L10,3.5 L0,7 Z" fill="#A0AEC0"/></marker>
+    <marker id="ah3-s" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><path d="M0,0 L10,3.5 L0,7 Z" fill="#38A169"/></marker>
+    <marker id="ah3-h" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><path d="M0,0 L10,3.5 L0,7 Z" fill="#C05621"/></marker>
+  </defs>
+  <!-- 1. トップ → Q&A一覧 (horizontal: Screen1 right → Screen5 left) -->
+  <path d="M460,393 L700,393" stroke="#A0AEC0" stroke-width="2.5" fill="none" marker-end="url(#ah3)"/>
+  <!-- 2. Q&A一覧 → Q&A詳細 (horizontal: Screen5 right → Screen6 left) -->
+  <path d="M1060,370 L1300,370" stroke="#A0AEC0" stroke-width="2.5" fill="none" marker-end="url(#ah3)"/>
+  <!-- 3. トップ → 新規登録 (vertical: Screen1 bottom center → Screen2 top center) -->
+  <path d="M280,616 L280,860" stroke="#A0AEC0" stroke-width="2.5" fill="none" marker-end="url(#ah3)"/>
+  <!-- 4. トップ → ログイン (diagonal: Screen1 right lower → Screen3 top left) -->
+  <path d="M460,520 C580,680 650,790 700,860" stroke="#A0AEC0" stroke-width="2.5" fill="none" marker-end="url(#ah3)"/>
+  <!-- 5. 新規登録 → ログイン (horizontal: Screen2 right → Screen3 left, 登録完了) -->
+  <path d="M460,1044 L700,1044" stroke="#38A169" stroke-width="2.5" fill="none" marker-end="url(#ah3-s)"/>
+  <!-- 6. ログイン → Q&A一覧 (vertical up: Screen3 top center → Screen5 bottom center, ログイン成功) -->
+  <path d="M880,860 L880,570" stroke="#38A169" stroke-width="2.5" fill="none" marker-end="url(#ah3-s)"/>
+  <!-- 7. ログイン → PW再設定 (horizontal: Screen3 right → Screen4 left) -->
+  <path d="M1060,1010 L1300,1010" stroke="#A0AEC0" stroke-width="2.5" fill="none" marker-end="url(#ah3)"/>
+  <!-- 8. PW再設定 → ログイン (horizontal return: Screen4 left → Screen3 right, 再設定完了) -->
+  <path d="M1300,1050 L1060,1050" stroke="#38A169" stroke-width="2.5" fill="none" marker-end="url(#ah3-s)"/>
+  <!-- 9. Q&A一覧 → 質問投稿 (diagonal down: Screen5 bottom → Screen7 top) -->
+  <path d="M800,570 L550,1580" stroke="#A0AEC0" stroke-width="2.5" fill="none" marker-end="url(#ah3)"/>
+  <!-- 10. Q&A一覧 → マイページ (diagonal down: Screen5 bottom right → Screen8 top) -->
+  <path d="M960,570 L1100,1580" stroke="#A0AEC0" stroke-width="2.5" fill="none" marker-end="url(#ah3)"/>
+  <!-- 11. 質問投稿 → Q&A詳細 (curved: Screen7 right → Screen6 bottom, AI回答表示) -->
+  <path d="M660,1700 C1000,1300 1350,800 1480,620" stroke="#38A169" stroke-width="2.5" fill="none" marker-end="url(#ah3-s)"/>
+  <!-- 12. マイページ → Q&A詳細 (curved up: Screen8 top → Screen6 bottom, 質問クリック) -->
+  <path d="M1260,1580 C1350,1300 1500,900 1530,620" stroke="#A0AEC0" stroke-width="2.5" fill="none" marker-end="url(#ah3)"/>
+  <!-- 13. Q&A詳細 self-loop (補足回答) -->
+  <path d="M1660,350 C1740,350 1760,250 1660,250 C1560,250 1580,310 1660,310" stroke="#C05621" stroke-width="2.5" fill="none" marker-end="url(#ah3-h)"/>
+</svg>
+
+<!-- Section 3 arrow labels -->
+<div class="arrow-label" style="left:3930px;top:371px;">Q&A一覧へ</div>
+<div class="arrow-label" style="left:4530px;top:348px;">質問クリック</div>
+<div class="arrow-label" style="left:3595px;top:726px;">新規登録</div>
+<div class="arrow-label" style="left:3850px;top:680px;">ログイン</div>
+<div class="arrow-label success" style="left:3930px;top:1022px;">登録完了</div>
+<div class="arrow-label success" style="left:4290px;top:700px;">ログイン成功</div>
+<div class="arrow-label" style="left:4530px;top:988px;">PW忘れ</div>
+<div class="arrow-label success" style="left:4530px;top:1028px;">再設定完了</div>
+<div class="arrow-label" style="left:3950px;top:1060px;">質問する</div>
+<div class="arrow-label" style="left:4330px;top:1060px;">マイページ</div>
+<div class="arrow-label ai-color" style="left:4420px;top:1150px;">AI回答表示</div>
+<div class="arrow-label" style="left:4700px;top:1100px;">質問クリック</div>
+<div class="arrow-label human-color" style="left:5075px;top:268px;">補足回答を投稿</div>
+
+
+<!-- =============================== -->
+<!--  Row 1: メインフロー (y=170)    -->
+<!-- =============================== -->
+
+<!-- Screen 1: トップ -->
+<div class="screen-card" style="left:3500px;top:170px;">
+  <div class="screen-card__header"><div class="screen-card__title"><span class="screen-card__num">1</span>トップ</div><span class="screen-card__badge screen-card__badge--public">公開</span></div>
+  <div class="mini-header"><div class="mini-header__logo"><span class="mini-header__logo-icon">Q</span> 保険Q&A</div><nav><a href="#">一覧</a><a href="#" class="btn-o">ログイン</a><a href="#" class="btn-p">登録</a></nav></div>
+  <div class="mini-main">
+    <div class="mini-hero"><h3>保険の「困った」を、<br>AIとみんなで解決。</h3><p>損害保険の疑問をAIが即座に回答</p><div class="mini-ai-search"><input placeholder="AIに質問してみよう..."><button class="send-btn">▶</button></div></div>
+    <div class="mini-feature-pills"><div class="mini-feature-pill">AI即時回答</div><div class="mini-feature-pill">専門家補足</div><div class="mini-feature-pill">カテゴリ検索</div></div>
+    <div class="mini-h2">最近のQ&A</div>
+    <div class="mini-card"><span class="mini-badge mini-badge--fire">火災保険</span><div class="mini-card-title">Q: 建築年割引の確認資料は？</div><div class="mini-card-text">A: 建物登記簿謄本または...</div><div class="mini-answer-dots"><span class="mini-answer-dot mini-answer-dot--ai"></span><span class="mini-answer-dot mini-answer-dot--human"></span><span class="mini-answer-count">3件</span></div></div>
+    <div class="mini-card"><span class="mini-badge mini-badge--auto">自動車保険</span><div class="mini-card-title">Q: 等級の引継ぎ条件は？</div><div class="mini-card-text">A: 同居親族間で可能...</div><div class="mini-answer-dots"><span class="mini-answer-dot mini-answer-dot--ai"></span><span class="mini-answer-count">1件</span></div></div>
+  </div>
+  <div class="mini-footer">保険Q&A | お問い合わせ | 利用規約</div>
+</div>
+
+<!-- Screen 5: Q&A一覧 -->
+<div class="screen-card" style="left:4100px;top:170px;">
+  <div class="screen-card__header"><div class="screen-card__title"><span class="screen-card__num">5</span>Q&A一覧</div><span class="screen-card__badge screen-card__badge--public">公開</span></div>
+  <div class="mini-header"><div class="mini-header__logo"><span class="mini-header__logo-icon">Q</span> 保険Q&A</div><nav><a href="#" class="active-link">一覧</a><a href="#">質問</a><a href="#">マイ</a></nav></div>
+  <div class="mini-main">
+    <div class="mini-ai-search-standalone"><input placeholder="AIに自然言語で質問..."><button class="send-btn">▶</button></div>
+    <div class="mini-filter-tags"><span class="mini-filter-tag active">すべて</span><span class="mini-filter-tag">火災保険</span><span class="mini-filter-tag">自動車保険</span><span class="mini-filter-tag">傷害保険</span></div>
+    <div class="mini-card"><span class="mini-badge mini-badge--fire">火災保険</span><div class="mini-card-title">Q: 建築年割引の確認資料は？</div><div class="mini-card-text">A: 建物登記簿謄本または...</div><div style="display:flex;justify-content:space-between;align-items:center;"><div class="mini-answer-dots"><span class="mini-answer-dot mini-answer-dot--ai"></span><span class="mini-answer-dot mini-answer-dot--human"></span><span class="mini-answer-count">3件</span></div><div class="mini-meta">user01 | 2026/02/20</div></div></div>
+    <div class="mini-card"><span class="mini-badge mini-badge--auto">自動車保険</span><div class="mini-card-title">Q: 等級の引継ぎ条件は？</div><div class="mini-card-text">A: 同居親族間で可能...</div><div style="display:flex;justify-content:space-between;align-items:center;"><div class="mini-answer-dots"><span class="mini-answer-dot mini-answer-dot--ai"></span><span class="mini-answer-count">1件</span></div><div class="mini-meta">user02 | 2026/02/19</div></div></div>
+    <div class="mini-pagination"><span>&lt;</span><span class="current">1</span><span>2</span><span>3</span><span>&gt;</span></div>
+  </div>
+  <div class="mini-footer">保険Q&A | お問い合わせ | 利用規約</div>
+</div>
+
+<!-- Screen 6: Q&A詳細 -->
+<div class="screen-card" style="left:4700px;top:170px;">
+  <div class="screen-card__header"><div class="screen-card__title"><span class="screen-card__num">6</span>Q&A詳細</div><span class="screen-card__badge screen-card__badge--public">公開</span></div>
+  <div class="mini-header"><div class="mini-header__logo"><span class="mini-header__logo-icon">Q</span> 保険Q&A</div><nav><a href="#">一覧</a><a href="#">質問</a><a href="#">マイ</a></nav></div>
+  <div class="mini-main">
+    <div class="mini-back">← Q&A一覧に戻る</div>
+    <div class="mini-card mini-q-card"><span class="mini-badge mini-badge--fire">火災保険</span><div style="font-size:11px;font-weight:600;margin:4px 0;">Q: 建築年割引の適用に必要な確認資料</div><div class="mini-card-text">火災保険の建築年割引を適用したい...</div><div class="mini-meta">user01 | 2026/02/20</div></div>
+    <div class="mini-card mini-a-card"><div style="font-size:10px;font-weight:600;color:var(--color-ai);margin-bottom:4px;">🤖 AI回答</div><div class="mini-card-text" style="color:var(--color-text);">以下の書類が必要です:<br>1. 建物登記簿謄本<br>2. 建築確認書</div></div>
+    <div class="mini-card mini-human-card"><div style="font-size:10px;font-weight:600;color:var(--color-human);margin-bottom:3px;display:flex;align-items:center;gap:4px;"><div class="mini-avatar mini-avatar--sm mini-avatar--human">P</div>専門家の補足</div><div class="mini-card-text" style="color:var(--color-text);">実務上は性能評価書も有効です。</div></div>
+    <div class="mini-answer-input"><div class="mini-answer-input-label">補足回答を投稿</div><textarea class="mini-answer-textarea" placeholder="回答を入力..."></textarea><button class="mini-answer-submit">投稿する</button></div>
+  </div>
+  <div class="mini-footer">保険Q&A | お問い合わせ | 利用規約</div>
+</div>
+
+<!-- =============================== -->
+<!--  Row 2: 認証フロー (y=860)      -->
+<!-- =============================== -->
+
+<!-- Screen 2: 新規登録 -->
+<div class="screen-card" style="left:3500px;top:860px;">
+  <div class="screen-card__header"><div class="screen-card__title"><span class="screen-card__num">2</span>新規登録</div><span class="screen-card__badge screen-card__badge--public">公開</span></div>
+  <div class="mini-header"><div class="mini-header__logo"><span class="mini-header__logo-icon">Q</span> 保険Q&A</div><nav><a href="#">一覧</a><a href="#" class="btn-o">ログイン</a></nav></div>
+  <div class="mini-main" style="padding:14px 20px;">
+    <div class="mini-h1">新規登録</div>
+    <div class="mini-label">メールアドレス</div><input class="mini-input" placeholder="example@mail.com">
+    <div class="mini-label">パスワード</div><input class="mini-input" type="password" placeholder="8文字以上">
+    <div class="mini-label">パスワード（確認）</div><input class="mini-input" type="password" placeholder="もう一度入力">
+    <div class="mini-btn mini-btn--primary">登録する</div>
+    <div class="mini-center" style="margin-top:4px;"><span style="font-size:9px;">お持ちの方は </span><a href="#" class="mini-link">ログイン</a></div>
+  </div>
+  <div class="mini-footer">保険Q&A | お問い合わせ | 利用規約</div>
+</div>
+
+<!-- Screen 3: ログイン -->
+<div class="screen-card" style="left:4100px;top:860px;">
+  <div class="screen-card__header"><div class="screen-card__title"><span class="screen-card__num">3</span>ログイン</div><span class="screen-card__badge screen-card__badge--public">公開</span></div>
+  <div class="mini-header"><div class="mini-header__logo"><span class="mini-header__logo-icon">Q</span> 保険Q&A</div><nav><a href="#">一覧</a><a href="#" class="btn-p">登録</a></nav></div>
+  <div class="mini-main" style="padding:14px 20px;">
+    <div class="mini-h1">ログイン</div>
+    <div class="mini-label">メールアドレス</div><input class="mini-input" placeholder="example@mail.com">
+    <div class="mini-label">パスワード</div><input class="mini-input" type="password" placeholder="パスワード">
+    <div class="mini-btn mini-btn--primary">ログイン</div>
+    <div class="mini-center" style="margin-top:4px;"><a href="#" class="mini-link">パスワードを忘れた方</a></div>
+    <div class="mini-center" style="margin-top:4px;"><span style="font-size:9px;">お持ちでない方は </span><a href="#" class="mini-link">新規登録</a></div>
+  </div>
+  <div class="mini-footer">保険Q&A | お問い合わせ | 利用規約</div>
+</div>
+
+<!-- Screen 4: PW再設定 -->
+<div class="screen-card" style="left:4700px;top:860px;">
+  <div class="screen-card__header"><div class="screen-card__title"><span class="screen-card__num">4</span>PW再設定</div><span class="screen-card__badge screen-card__badge--public">公開</span></div>
+  <div class="mini-header"><div class="mini-header__logo"><span class="mini-header__logo-icon">Q</span> 保険Q&A</div><nav><a href="#">一覧</a><a href="#" class="btn-o">ログイン</a><a href="#" class="btn-p">登録</a></nav></div>
+  <div class="mini-main" style="padding:14px 20px;">
+    <div class="mini-h1">パスワード再設定</div>
+    <p style="text-align:center;font-size:9px;color:var(--color-text-muted);margin-bottom:10px;">登録メールアドレスを入力してください。<br>再設定リンクを送信します。</p>
+    <div class="mini-label">メールアドレス</div><input class="mini-input" placeholder="example@mail.com">
+    <div class="mini-btn mini-btn--primary">送信する</div>
+    <div class="mini-center" style="margin-top:6px;"><a href="#" class="mini-link">← ログインに戻る</a></div>
+  </div>
+  <div class="mini-footer">保険Q&A | お問い合わせ | 利用規約</div>
+</div>
+
+<!-- =============================== -->
+<!--  Row 3: ログイン後 (y=1580)     -->
+<!-- =============================== -->
+
+<!-- Screen 7: 質問投稿 -->
+<div class="screen-card" style="left:3700px;top:1580px;">
+  <div class="screen-card__header"><div class="screen-card__title"><span class="screen-card__num">7</span>質問投稿</div><span class="screen-card__badge screen-card__badge--auth">要認証</span></div>
+  <div class="mini-header"><div class="mini-header__logo"><span class="mini-header__logo-icon">Q</span> 保険Q&A</div><nav><a href="#">一覧</a><a href="#" class="active-link">質問</a><a href="#">マイ</a></nav></div>
+  <div class="mini-main" style="padding:14px 18px;">
+    <div class="mini-h1">質問を投稿する</div>
+    <p style="text-align:center;font-size:9px;color:var(--color-text-muted);margin-bottom:8px;">AIが即座に回答 + 専門家が補足します</p>
+    <div class="mini-label">質問内容</div><textarea class="mini-textarea" placeholder="例: 建築年割引の適用に..."></textarea>
+    <div class="mini-suggestions"><div class="mini-suggestions-title">✨ 類似のQ&A</div><div class="mini-suggestion-item">建築年割引の確認資料は？</div><div class="mini-suggestion-item">性能評価書の取得方法は？</div><div class="mini-suggestion-item">割引の重複適用は可能？</div></div>
+    <div class="mini-btn mini-btn--ai">AIに質問する</div>
+  </div>
+  <div class="mini-footer">保険Q&A | お問い合わせ | 利用規約</div>
+</div>
+
+<!-- Screen 8: マイページ -->
+<div class="screen-card" style="left:4400px;top:1580px;">
+  <div class="screen-card__header"><div class="screen-card__title"><span class="screen-card__num">8</span>マイページ</div><span class="screen-card__badge screen-card__badge--auth">要認証</span></div>
+  <div class="mini-header"><div class="mini-header__logo"><span class="mini-header__logo-icon">Q</span> 保険Q&A</div><nav><a href="#">一覧</a><a href="#">質問</a><a href="#" class="active-link">マイ</a></nav></div>
+  <div class="mini-main">
+    <div class="mini-profile"><div class="mini-avatar">U</div><div><div style="font-size:11px;font-weight:600;">user01</div><div style="font-size:9px;color:var(--color-text-muted);">test@example.com</div><div style="margin-top:2px;display:flex;gap:6px;"><a href="#" class="mini-link" style="font-size:9px;">メール変更</a><a href="#" class="mini-link" style="font-size:9px;">PW変更</a></div></div></div>
+    <div class="mini-tab-bar"><div class="mini-tab active">質問</div><div class="mini-tab">回答</div></div>
+    <div class="mini-card"><span class="mini-badge mini-badge--fire">火災保険</span><div class="mini-card-title">Q: 建築年割引の確認資料は？</div><div class="mini-card-text">A: 建物登記簿謄本または...</div><div style="display:flex;justify-content:space-between;align-items:center;"><div class="mini-answer-dots"><span class="mini-answer-dot mini-answer-dot--ai"></span><span class="mini-answer-dot mini-answer-dot--human"></span><span class="mini-answer-count">2件</span></div><div class="mini-meta">2026/02/20</div></div></div>
+    <div class="mini-card"><span class="mini-badge mini-badge--auto">自動車保険</span><div class="mini-card-title">Q: 中断証明書の発行条件は？</div><div class="mini-card-text">A: 契約の満期日から...</div><div style="display:flex;justify-content:space-between;align-items:center;"><div class="mini-answer-dots"><span class="mini-answer-dot mini-answer-dot--ai"></span><span class="mini-answer-count">1件</span></div><div class="mini-meta">2026/02/15</div></div></div>
+    <div class="mini-pagination"><span>&lt;</span><span class="current">1</span><span>2</span><span>&gt;</span></div>
+  </div>
+  <div class="mini-footer">保険Q&A | お問い合わせ | 利用規約</div>
+</div>
+
+</body>
+</html>
