@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>保険Q&A - ER図</title>
+  <script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --color-primary: #4A7C9B;
+      --color-primary-dark: #3A6280;
+      --color-bg: #F7F5F2;
+      --color-surface: #FFFFFF;
+      --color-text: #2D3748;
+      --color-text-secondary: #718096;
+      --color-text-muted: #A0AEC0;
+      --color-border: #E2E8F0;
+      --color-pk: #EBF8FF;
+      --color-pk-text: #2B6CB0;
+      --color-fk: #FFF5F5;
+      --color-fk-text: #C53030;
+      --color-col: #F7FAFC;
+      --color-type: #805AD5;
+      --color-not-null: #38A169;
+      --color-unique: #D69E2E;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Noto Sans JP', sans-serif;
+      background: var(--color-bg);
+      color: var(--color-text);
+      width: 1800px;
+      height: 1100px;
+      position: relative;
+      overflow: visible;
+    }
+
+    /* Title Banner */
+    .title-banner {
+      position: absolute; left: 0; top: 0; width: 1800px; height: 70px;
+      background: var(--color-primary); display: flex; align-items: center;
+      padding: 0 40px; gap: 14px;
+    }
+    .title-banner .logo {
+      width: 40px; height: 40px; background: rgba(255,255,255,0.2); color: #fff;
+      border-radius: 8px; display: flex; align-items: center; justify-content: center;
+      font-size: 20px; font-weight: 700;
+    }
+    .title-banner h1 { color: #fff; font-size: 22px; font-weight: 700; }
+
+    /* Table Card */
+    .table-card {
+      position: absolute;
+      background: var(--color-surface);
+      border: 2px solid var(--color-border);
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      overflow: hidden;
+      min-width: 320px;
+      z-index: 5;
+    }
+    .table-card__header {
+      padding: 12px 16px;
+      background: var(--color-primary);
+      color: #fff;
+      font-size: 15px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .table-card__header .icon {
+      width: 22px; height: 22px; background: rgba(255,255,255,0.2);
+      border-radius: 4px; display: flex; align-items: center; justify-content: center;
+      font-size: 11px;
+    }
+    .table-card__body { padding: 0; }
+    .col-row {
+      display: flex; align-items: center; padding: 7px 16px;
+      border-bottom: 1px solid #F0F0F0; font-size: 12px; gap: 8px;
+    }
+    .col-row:last-child { border-bottom: none; }
+    .col-row--pk { background: var(--color-pk); }
+    .col-row--fk { background: var(--color-fk); }
+    .col-name { font-weight: 600; width: 200px; color: var(--color-text); }
+    .col-type { font-weight: 600; color: var(--color-type); width: 80px; font-size: 11px; }
+    .col-badge {
+      display: inline-block; padding: 1px 6px; border-radius: 4px;
+      font-size: 9px; font-weight: 700; margin-left: 2px;
+    }
+    .badge-pk { background: #BEE3F8; color: var(--color-pk-text); }
+    .badge-fk { background: #FED7D7; color: var(--color-fk-text); }
+    .badge-nn { background: #C6F6D5; color: var(--color-not-null); }
+    .badge-uq { background: #FEFCBF; color: var(--color-unique); }
+
+    /* Legend */
+    .legend {
+      position: absolute;
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: 10px;
+      padding: 14px 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .legend-title {
+      font-size: 11px; font-weight: 700; color: var(--color-text-muted);
+      text-transform: uppercase; margin-bottom: 2px;
+    }
+    .legend-item {
+      display: flex; align-items: center; gap: 8px;
+      font-size: 11px; color: var(--color-text-secondary);
+    }
+    .legend-line {
+      width: 30px; height: 2px;
+    }
+    .legend-badge-sample {
+      display: inline-block; padding: 1px 6px; border-radius: 4px;
+      font-size: 9px; font-weight: 700;
+    }
+
+    /* Relationship line labels */
+    .rel-label {
+      position: absolute; font-size: 10px; font-weight: 600;
+      color: var(--color-text-secondary); background: var(--color-bg);
+      padding: 1px 6px; border-radius: 4px; white-space: nowrap; z-index: 10;
+    }
+    .card-label {
+      position: absolute; font-size: 13px; font-weight: 600;
+      color: var(--color-text-secondary); z-index: 10;
+    }
+  </style>
+</head>
+<body>
+
+<!-- Title Banner -->
+<div class="title-banner">
+  <div class="logo">Q</div>
+  <h1>保険Q&A ER図 ─ データベース設計</h1>
+</div>
+
+<!-- SVG for relationship lines -->
+<svg style="position:absolute;left:0;top:0;width:1800px;height:1100px;pointer-events:none;z-index:2;" viewBox="0 0 1800 1100" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- Crow's foot (many) marker -->
+    <marker id="many" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+      <path d="M0,0 L10,6 L0,12" stroke="#718096" stroke-width="1.5" fill="none"/>
+      <line x1="10" y1="0" x2="10" y2="12" stroke="#718096" stroke-width="1.5"/>
+    </marker>
+    <!-- One marker (single line) -->
+    <marker id="one" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+      <line x1="10" y1="1" x2="10" y2="11" stroke="#718096" stroke-width="1.5"/>
+      <line x1="6" y1="1" x2="6" y2="11" stroke="#718096" stroke-width="1.5"/>
+    </marker>
+  </defs>
+
+  <!-- users (right:540) → questions (left:620) : 1 --- * -->
+  <path d="M540,280 L620,280" stroke="#718096" stroke-width="2" fill="none" marker-start="url(#one)" marker-end="url(#many)"/>
+
+  <!-- users (right:540) → answers (left:620) : 1 --- * -->
+  <path d="M540,380 L560,380 L560,780 L620,780" stroke="#718096" stroke-width="2" fill="none" marker-start="url(#one)" marker-end="url(#many)"/>
+
+  <!-- categories (bottom:350+h) → questions (top) : 1 --- * -->
+  <path d="M310,530 L310,600 L700,600 L700,440" stroke="#718096" stroke-width="2" fill="none" marker-start="url(#one)" marker-end="url(#many)"/>
+
+  <!-- questions (right:960) → ai_answers (left:1100) : 1 --- 1 -->
+  <path d="M960,280 L1100,280" stroke="#718096" stroke-width="2" fill="none" marker-start="url(#one)" marker-end="url(#one)"/>
+
+  <!-- questions (right:960) → answers (left:620+offset) : 1 --- * -->
+  <path d="M800,440 L800,620" stroke="#718096" stroke-width="2" fill="none" marker-start="url(#one)" marker-end="url(#many)"/>
+</svg>
+
+<!-- Relationship cardinality labels -->
+<div class="rel-label" style="left:548px;top:260px;">1</div>
+<div class="rel-label" style="left:618px;top:260px;">*</div>
+
+<div class="rel-label" style="left:548px;top:362px;">1</div>
+<div class="rel-label" style="left:618px;top:762px;">*</div>
+
+<div class="rel-label" style="left:298px;top:536px;">1</div>
+<div class="rel-label" style="left:690px;top:442px;">*</div>
+
+<div class="rel-label" style="left:958px;top:260px;">1</div>
+<div class="rel-label" style="left:1098px;top:260px;">1</div>
+
+<div class="rel-label" style="left:808px;top:442px;">1</div>
+<div class="rel-label" style="left:808px;top:618px;">*</div>
+
+
+<!-- ========================================= -->
+<!-- Table: users -->
+<!-- ========================================= -->
+<div class="table-card" style="left:200px;top:120px;width:340px;">
+  <div class="table-card__header"><span class="icon">U</span>users</div>
+  <div class="table-card__body">
+    <div class="col-row col-row--pk">
+      <span class="col-name">id</span>
+      <span class="col-type">bigint</span>
+      <span class="col-badge badge-pk">PK</span>
+    </div>
+    <div class="col-row">
+      <span class="col-name">name</span>
+      <span class="col-type">string</span>
+      <span class="col-badge badge-nn">NOT NULL</span>
+    </div>
+    <div class="col-row">
+      <span class="col-name">email</span>
+      <span class="col-type">string</span>
+      <span class="col-badge badge-nn">NOT NULL</span>
+      <span class="col-badge badge-uq">UNIQUE</span>
+    </div>
+    <div class="col-row">
+      <span class="col-name">encrypted_password</span>
+      <span class="col-type">string</span>
+      <span class="col-badge badge-nn">NOT NULL</span>
+    </div>
+    <div class="col-row">
+      <span class="col-name">reset_password_token</span>
+      <span class="col-type">string</span>
+      <span class="col-badge badge-uq">UNIQUE</span>
+    </div>
+    <div class="col-row">
+      <span class="col-name">reset_password_sent_at</span>
+      <span class="col-type">datetime</span>
+    </div>
+    <div class="col-row">
+      <span class="col-name">remember_created_at</span>
+      <span class="col-type">datetime</span>
+    </div>
+    <div class="col-row">
+      <span class="col-name">created_at</span>
+      <span class="col-type">datetime</span>
+      <span class="col-badge badge-nn">NOT NULL</span>
+    </div>
+    <div class="col-row">
+      <span class="col-name">updated_at</span>
+      <span class="col-type">datetime</span>
+      <span class="col-badge badge-nn">NOT NULL</span>
+    </div>
+  </div>
+</div>
+
+<!-- ========================================= -->
+<!-- Table: categories -->
+<!-- ========================================= -->
+<div class="table-card" style="left:120px;top:530px;width:340px;">
+  <div class="table-card__header"><span class="icon">C</span>categories</div>
+  <div class="table-card__body">
+    <div class="col-row col-row--pk">
+      <span class="col-name">id</span>
+      <span class="col-type">bigint</span>
+      <span class="col-badge badge-pk">PK</span>
+    </div>
+    <div class="col-row">
+      <span class="col-name">name</span>
+      <span class="col-type">string</span>
+      <span class="col-badge badge-nn">NOT NULL</span>
+      <span class="col-badge badge-uq">UNIQUE</span>
+    </div>
+    <div class="col-row">
+      <span class="col-name">created_at</span>
+      <span class="col-type">datetime</span>
+      <span class="col-badge badge-nn">NOT NULL</span>
+    </div>
+    <div class="col-row">
+      <span class="col-name">updated_at</span>
+      <span class="col-type">datetime</span>
+      <span class="col-badge badge-nn">NOT NULL</span>
+    </div>
+  </div>
+</div>
+
+<!-- ========================================= -->
+<!-- Table: questions -->
+<!-- ========================================= -->
+<div class="table-card" style="left:620px;top:120px;width:340px;">
+  <div class="table-card__header"><span class="icon">Q</span>questions</div>
+  <div class="table-card__body">
+    <div class="col-row col-row--pk">
+      <span class="col-name">id</span>
+      <span class="col-type">bigint</span>
+      <span class="col-badge badge-pk">PK</span>
+    </div>
+    <div class="col-row col-row--fk">
+      <span class="col-name">user_id</span>
+      <span class="col-type">bigint</span>
+      <span class="col-badge badge-fk">FK</span>
+      <span class="col-badge badge-nn">NOT NULL</span>
+    </div>
+    <div class="col-row col-row--fk">
+      <span class="col-name">category_id</span>
+      <span class="col-type">bigint</span>
+      <span class="col-badge badge-fk">FK</span>
+      <span class="col-badge badge-nn">NOT NULL</span>
+    </div>
+    <div class="col-row">
+      <span class="col-name">title</span>
+      <span class="col-type">string</span>
+      <span class="col-badge badge-nn">NOT NULL</span>
+    </div>
+    <div class="col-row">
+      <span class="col-name">content</span>
+      <span class="col-type">text</span>
+      <span class="col-badge badge-nn">NOT NULL</span>
+    </div>
+    <div class="col-row">
+      <span class="col-name">created_at</span>
+      <span class="col-type">datetime</span>
+      <span class="col-badge badge-nn">NOT NULL</span>
+    </div>
+    <div class="col-row">
+      <span class="col-name">updated_at</span>
+      <span class="col-type">datetime</span>
+      <span class="col-badge badge-nn">NOT NULL</span>
+    </div>
+  </div>
+</div>
+
+<!-- ========================================= -->
+<!-- Table: ai_answers -->
+<!-- ========================================= -->
+<div class="table-card" style="left:1100px;top:120px;width:340px;">
+  <div class="table-card__header"><span class="icon">A</span>ai_answers</div>
+  <div class="table-card__body">
+    <div class="col-row col-row--pk">
+      <span class="col-name">id</span>
+      <span class="col-type">bigint</span>
+      <span class="col-badge badge-pk">PK</span>
+    </div>
+    <div class="col-row col-row--fk">
+      <span class="col-name">question_id</span>
+      <span class="col-type">bigint</span>
+      <span class="col-badge badge-fk">FK</span>
+      <span class="col-badge badge-nn">NOT NULL</span>
+      <span class="col-badge badge-uq">UNIQUE</span>
+    </div>
+    <div class="col-row">
+      <span class="col-name">content</span>
+      <span class="col-type">text</span>
+      <span class="col-badge badge-nn">NOT NULL</span>
+    </div>
+    <div class="col-row">
+      <span class="col-name">created_at</span>
+      <span class="col-type">datetime</span>
+      <span class="col-badge badge-nn">NOT NULL</span>
+    </div>
+    <div class="col-row">
+      <span class="col-name">updated_at</span>
+      <span class="col-type">datetime</span>
+      <span class="col-badge badge-nn">NOT NULL</span>
+    </div>
+  </div>
+</div>
+
+<!-- ========================================= -->
+<!-- Table: answers (human supplementary) -->
+<!-- ========================================= -->
+<div class="table-card" style="left:620px;top:620px;width:340px;">
+  <div class="table-card__header"><span class="icon">H</span>answers</div>
+  <div class="table-card__body">
+    <div class="col-row col-row--pk">
+      <span class="col-name">id</span>
+      <span class="col-type">bigint</span>
+      <span class="col-badge badge-pk">PK</span>
+    </div>
+    <div class="col-row col-row--fk">
+      <span class="col-name">question_id</span>
+      <span class="col-type">bigint</span>
+      <span class="col-badge badge-fk">FK</span>
+      <span class="col-badge badge-nn">NOT NULL</span>
+    </div>
+    <div class="col-row col-row--fk">
+      <span class="col-name">user_id</span>
+      <span class="col-type">bigint</span>
+      <span class="col-badge badge-fk">FK</span>
+      <span class="col-badge badge-nn">NOT NULL</span>
+    </div>
+    <div class="col-row">
+      <span class="col-name">content</span>
+      <span class="col-type">text</span>
+      <span class="col-badge badge-nn">NOT NULL</span>
+    </div>
+    <div class="col-row">
+      <span class="col-name">created_at</span>
+      <span class="col-type">datetime</span>
+      <span class="col-badge badge-nn">NOT NULL</span>
+    </div>
+    <div class="col-row">
+      <span class="col-name">updated_at</span>
+      <span class="col-type">datetime</span>
+      <span class="col-badge badge-nn">NOT NULL</span>
+    </div>
+  </div>
+</div>
+
+<!-- ========================================= -->
+<!-- Legend -->
+<!-- ========================================= -->
+<div class="legend" style="left:1100px;top:450px;">
+  <div class="legend-title">凡例</div>
+  <div class="legend-item">
+    <span class="legend-badge-sample badge-pk">PK</span> Primary Key
+  </div>
+  <div class="legend-item">
+    <span class="legend-badge-sample badge-fk">FK</span> Foreign Key
+  </div>
+  <div class="legend-item">
+    <span class="legend-badge-sample badge-nn">NOT NULL</span> NULL不可
+  </div>
+  <div class="legend-item">
+    <span class="legend-badge-sample badge-uq">UNIQUE</span> ユニーク制約
+  </div>
+  <div class="legend-item" style="margin-top:6px;">
+    <svg width="30" height="14"><line x1="0" y1="7" x2="30" y2="7" stroke="#718096" stroke-width="2"/></svg>
+    1対多（1 --- *）
+  </div>
+  <div class="legend-item">
+    <svg width="30" height="14"><line x1="0" y1="7" x2="30" y2="7" stroke="#718096" stroke-width="2" stroke-dasharray="4,3"/></svg>
+    1対1（1 --- 1）
+  </div>
+</div>
+
+<!-- Relationship descriptions -->
+<div class="card-label" style="left:1100px;top:680px;">
+  <div style="font-size:12px;font-weight:700;color:var(--color-primary);margin-bottom:6px;">リレーション</div>
+  <div style="font-size:11px;line-height:1.8;color:var(--color-text-secondary);">
+    users 1 ─ * questions<br>
+    users 1 ─ * answers<br>
+    categories 1 ─ * questions<br>
+    questions 1 ─ 1 ai_answers<br>
+    questions 1 ─ * answers
+  </div>
+</div>
+
+</body>
+</html>

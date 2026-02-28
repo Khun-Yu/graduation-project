@@ -285,3 +285,12 @@
 | 8 | マイページ | 必要 | プロフィール、質問履歴、ブックマーク管理 |
 | 9 | 利用規約 | 不要 | サービスの利用規約を表示 |
 | 10 | プライバシーポリシー | 不要 | 個人情報の取り扱いに関するポリシーを表示 |
+
+---
+
+## 12. ER図（データベース設計）
+
+[![ER図](https://i.gyazo.com/2ebba34a579d4a8425cad18d31c93d27.png)](https://gyazo.com/2ebba34a579d4a8425cad18d31c93d27)
+
+- **ER図の詳細（Mermaid）**：[docs/er-diagram.md](docs/er-diagram.md)
+- **ER図（HTML版）**：`wireframes/er-diagram.html`
