@@ -72,6 +72,10 @@
 
     <!-- Footer -->
     <footer class="bg-primary text-white/80 text-center text-xs py-5">
+      <div class="flex justify-center gap-4 mb-2">
+        <%= link_to "利用規約", terms_path, class: "hover:text-white transition underline" %>
+        <%= link_to "プライバシーポリシー", privacy_path, class: "hover:text-white transition underline" %>
+      </div>
       <p>&copy; <%= Date.today.year %> ほけんのQ&A</p>
     </footer>
   </body>

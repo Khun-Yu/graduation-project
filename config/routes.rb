@@ -6,6 +6,8 @@ Rails.application.routes.draw do
     resources :comments, only: [:create]
   end
   get "mypage", to: "mypage#show"
+  get "terms", to: "static_pages#terms"
+  get "privacy", to: "static_pages#privacy"
 
   get "up" => "rails/health#show", as: :rails_health_check
 end
