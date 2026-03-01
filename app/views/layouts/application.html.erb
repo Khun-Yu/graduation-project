@@ -16,29 +16,51 @@
     <!-- Header -->
     <header class="bg-primary text-white shadow-md">
       <nav class="container mx-auto px-4 py-3 flex items-center justify-between">
-        <%= link_to "ほけんのQ&A", root_path, class: "text-xl font-bold hover:opacity-80" %>
-        <div class="flex items-center gap-4 text-sm">
-          <%= link_to "Q&A一覧", questions_path, class: "hover:underline" %>
+        <%= link_to "ほけんのQ&A", root_path, class: "text-xl font-bold hover:opacity-80 tracking-wide" %>
+
+        <!-- Desktop Nav -->
+        <div class="hidden sm:flex items-center gap-4 text-sm">
+          <%= link_to "Q&A一覧", questions_path, class: "hover:opacity-80 transition" %>
           <% if user_signed_in? %>
-            <%= link_to "質問する", new_question_path, class: "bg-accent hover:bg-accent-dark px-4 py-2 rounded-md font-semibold transition" %>
-            <%= link_to "マイページ", mypage_path, class: "hover:underline" %>
-            <%= button_to "ログアウト", destroy_user_session_path, method: :delete, class: "hover:underline cursor-pointer" %>
+            <%= link_to "マイページ", mypage_path, class: "hover:opacity-80 transition" %>
+            <%= button_to "ログアウト", destroy_user_session_path, method: :delete, class: "hover:opacity-80 transition cursor-pointer" %>
+            <%= link_to new_question_path, class: "bg-accent hover:bg-accent-dark px-4 py-2 rounded-lg font-semibold transition shadow-sm" do %>
+              質問する
+            <% end %>
           <% else %>
-            <%= link_to "ログイン", new_user_session_path, class: "hover:underline" %>
-            <%= link_to "新規登録", new_user_registration_path, class: "bg-accent hover:bg-accent-dark px-4 py-2 rounded-md font-semibold transition" %>
+            <%= link_to "ログイン", new_user_session_path, class: "hover:opacity-80 transition" %>
+            <%= link_to "新規登録", new_user_registration_path, class: "bg-accent hover:bg-accent-dark px-4 py-2 rounded-lg font-semibold transition shadow-sm" %>
           <% end %>
         </div>
+
+        <!-- Mobile Menu Button -->
+        <button type="button" class="sm:hidden p-1" data-controller="mobile-menu" data-action="click->mobile-menu#toggle" aria-label="メニュー">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+        </button>
       </nav>
+
+      <!-- Mobile Nav -->
+      <div id="mobile-menu" class="hidden sm:hidden border-t border-white/20 px-4 py-3 space-y-2 text-sm">
+        <%= link_to "Q&A一覧", questions_path, class: "block py-2 hover:opacity-80" %>
+        <% if user_signed_in? %>
+          <%= link_to "質問する", new_question_path, class: "block py-2 hover:opacity-80" %>
+          <%= link_to "マイページ", mypage_path, class: "block py-2 hover:opacity-80" %>
+          <%= button_to "ログアウト", destroy_user_session_path, method: :delete, class: "block py-2 hover:opacity-80 cursor-pointer text-left" %>
+        <% else %>
+          <%= link_to "ログイン", new_user_session_path, class: "block py-2 hover:opacity-80" %>
+          <%= link_to "新規登録", new_user_registration_path, class: "block py-2 hover:opacity-80 font-semibold" %>
+        <% end %>
+      </div>
     </header>
 
     <!-- Flash Messages -->
     <% if notice %>
-      <div class="bg-green-100 border border-green-300 text-green-800 px-4 py-3 text-center text-sm">
+      <div class="bg-green-50 border-b border-green-200 text-green-700 px-4 py-3 text-center text-sm">
         <%= notice %>
       </div>
     <% end %>
     <% if alert %>
-      <div class="bg-red-100 border border-red-300 text-red-800 px-4 py-3 text-center text-sm">
+      <div class="bg-red-50 border-b border-red-200 text-red-700 px-4 py-3 text-center text-sm">
         <%= alert %>
       </div>
     <% end %>
@@ -49,7 +71,7 @@
     </main>
 
     <!-- Footer -->
-    <footer class="bg-primary text-white text-center text-xs py-4">
+    <footer class="bg-primary text-white/80 text-center text-xs py-5">
       <p>&copy; <%= Date.today.year %> ほけんのQ&A</p>
     </footer>
   </body>

@@ -1,13 +1,39 @@
-<section class="text-center mb-12">
-  <h1 class="text-3xl font-bold text-primary mb-4">ほけんのQ&A</h1>
-  <p class="text-gray-600 mb-6">損害保険の疑問をAIが回答。実務に役立つ知識をすぐに。</p>
+<!-- Hero Section -->
+<section class="text-center py-8 mb-10">
+  <h1 class="text-4xl font-bold text-primary mb-3">ほけんのQ&A</h1>
+  <p class="text-gray-600 text-lg mb-8">損害保険の疑問をAIが即座に回答。<br class="sm:hidden">実務に役立つ知識をすぐに。</p>
   <% if user_signed_in? %>
-    <%= link_to "質問する", new_question_path, class: "inline-block bg-accent hover:bg-accent-dark text-white px-6 py-3 rounded-lg font-semibold transition" %>
+    <%= link_to new_question_path, class: "inline-flex items-center gap-2 bg-accent hover:bg-accent-dark text-white px-8 py-3 rounded-lg font-semibold transition shadow-md hover:shadow-lg" do %>
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+      質問する
+    <% end %>
   <% else %>
-    <%= link_to "新規登録して質問する", new_user_registration_path, class: "inline-block bg-accent hover:bg-accent-dark text-white px-6 py-3 rounded-lg font-semibold transition" %>
+    <%= link_to new_user_registration_path, class: "inline-flex items-center gap-2 bg-accent hover:bg-accent-dark text-white px-8 py-3 rounded-lg font-semibold transition shadow-md hover:shadow-lg" do %>
+      新規登録して質問する
+    <% end %>
   <% end %>
+
+  <!-- Feature highlights -->
+  <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-10 max-w-2xl mx-auto">
+    <div class="bg-bg-white rounded-lg p-4 shadow-sm">
+      <div class="text-2xl mb-2">&#x1F916;</div>
+      <h3 class="font-semibold text-gray-800 text-sm">AI即時回答</h3>
+      <p class="text-xs text-gray-500 mt-1">質問を投稿すると、AIがすぐに回答を生成します</p>
+    </div>
+    <div class="bg-bg-white rounded-lg p-4 shadow-sm">
+      <div class="text-2xl mb-2">&#x1F50D;</div>
+      <h3 class="font-semibold text-gray-800 text-sm">キーワード検索</h3>
+      <p class="text-xs text-gray-500 mt-1">過去のQ&Aをキーワードで検索できます</p>
+    </div>
+    <div class="bg-bg-white rounded-lg p-4 shadow-sm">
+      <div class="text-2xl mb-2">&#x1F4DA;</div>
+      <h3 class="font-semibold text-gray-800 text-sm">損害保険に特化</h3>
+      <p class="text-xs text-gray-500 mt-1">保険実務に特化した正確な回答を提供します</p>
+    </div>
+  </div>
 </section>
 
+<!-- Recent Q&A -->
 <section>
   <h2 class="text-xl font-bold text-gray-800 mb-4">最新のQ&A</h2>
   <% if @recent_questions.any? %>
@@ -16,10 +42,16 @@
         <%= render "questions/card", question: question %>
       <% end %>
     </div>
-    <div class="text-center mt-6">
-      <%= link_to "すべてのQ&Aを見る →", questions_path, class: "text-primary hover:underline font-semibold" %>
+    <div class="text-center mt-8">
+      <%= link_to questions_path, class: "inline-flex items-center gap-1 text-primary hover:underline font-semibold" do %>
+        すべてのQ&Aを見る
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+      <% end %>
     </div>
   <% else %>
-    <p class="text-gray-500 text-center py-8">まだ質問がありません。最初の質問を投稿してみましょう！</p>
+    <div class="text-center py-12">
+      <div class="text-4xl mb-3">&#x1F4AC;</div>
+      <p class="text-gray-500">まだ質問がありません。最初の質問を投稿してみましょう！</p>
+    </div>
   <% end %>
 </section>

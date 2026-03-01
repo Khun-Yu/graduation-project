@@ -1,10 +1,18 @@
-<h1 class="text-2xl font-bold text-gray-800 mb-6">Q&A一覧</h1>
+<div class="flex items-center justify-between mb-6">
+  <h1 class="text-2xl font-bold text-gray-800">Q&A一覧</h1>
+  <% if user_signed_in? %>
+    <%= link_to new_question_path, class: "inline-flex items-center gap-1 bg-accent hover:bg-accent-dark text-white px-4 py-2 rounded-lg text-sm font-semibold transition shadow-sm" do %>
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+      質問する
+    <% end %>
+  <% end %>
+</div>
 
 <!-- Search -->
 <%= form_with url: questions_path, method: :get, class: "mb-6" do |f| %>
   <div class="flex gap-2">
-    <%= f.text_field :keyword, value: params[:keyword], placeholder: "キーワードで検索...", class: "flex-1 border border-gray-300 rounded-md px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary" %>
-    <%= f.submit "検索", class: "bg-primary hover:bg-primary-dark text-white px-6 py-2 rounded-md text-sm font-semibold transition cursor-pointer" %>
+    <%= f.text_field :keyword, value: params[:keyword], placeholder: "キーワードで検索...", class: "flex-1 border border-gray-300 rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition bg-bg-white" %>
+    <%= f.submit "検索", class: "bg-primary hover:bg-primary-dark text-white px-6 py-3 rounded-lg text-sm font-semibold transition cursor-pointer" %>
   </div>
 <% end %>
 
@@ -19,11 +27,14 @@
     <%= paginate @questions %>
   </div>
 <% else %>
-  <p class="text-gray-500 text-center py-8">
-    <% if params[:keyword].present? %>
-      「<%= params[:keyword] %>」に一致する質問はありませんでした。
-    <% else %>
-      まだ質問がありません。
-    <% end %>
-  </p>
+  <div class="text-center py-12">
+    <div class="text-4xl mb-3">&#x1F50D;</div>
+    <p class="text-gray-500">
+      <% if params[:keyword].present? %>
+        「<%= params[:keyword] %>」に一致する質問はありませんでした。
+      <% else %>
+        まだ質問がありません。
+      <% end %>
+    </p>
+  </div>
 <% end %>

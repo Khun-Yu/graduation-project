@@ -8,3 +8,15 @@
   --color-bg: #F7F5F2;
   --color-bg-white: #FFFFFF;
 }
+
+@layer base {
+  body {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  ::selection {
+    background-color: var(--color-primary);
+    color: white;
+  }
+}

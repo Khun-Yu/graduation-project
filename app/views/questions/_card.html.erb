@@ -1,11 +1,16 @@
-<%= link_to question_path(question), class: "block bg-bg-white rounded-lg shadow-sm p-5 hover:shadow-md transition" do %>
-  <h3 class="text-lg font-semibold text-gray-800 mb-2"><%= question.title %></h3>
+<%= link_to question_path(question), class: "block bg-bg-white rounded-lg shadow-sm p-5 hover:shadow-md transition border border-gray-100" do %>
+  <div class="flex items-start justify-between gap-3">
+    <h3 class="text-lg font-semibold text-gray-800 mb-2 flex-1"><%= question.title %></h3>
+    <% if question.ai_answer.present? %>
+      <span class="shrink-0 text-xs bg-green-100 text-green-700 px-2.5 py-1 rounded-full font-medium">AI回答あり</span>
+    <% end %>
+  </div>
   <p class="text-gray-600 text-sm mb-3 line-clamp-2"><%= truncate(question.content, length: 120) %></p>
   <div class="flex items-center justify-between text-xs text-gray-400">
-    <span><%= question.user.name %></span>
+    <span class="flex items-center gap-1">
+      <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+      <%= question.user.name %>
+    </span>
     <span><%= l(question.created_at, format: :short) rescue question.created_at.strftime("%Y/%m/%d %H:%M") %></span>
   </div>
-  <% if question.ai_answer.present? %>
-    <span class="inline-block mt-2 text-xs bg-green-100 text-green-700 px-2 py-1 rounded">AI回答あり</span>
-  <% end %>
 <% end %>
