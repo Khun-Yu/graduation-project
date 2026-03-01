@@ -2,7 +2,9 @@ Rails.application.routes.draw do
   devise_for :users
 
   root "home#index"
-  resources :questions, only: [:index, :show, :new, :create]
+  resources :questions, only: [:index, :show, :new, :create] do
+    resources :comments, only: [:create]
+  end
   get "mypage", to: "mypage#show"
 
   get "up" => "rails/health#show", as: :rails_health_check

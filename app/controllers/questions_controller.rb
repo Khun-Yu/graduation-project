@@ -8,7 +8,8 @@ class QuestionsController < ApplicationController
   end
 
   def show
-    @question = Question.includes(:ai_answer, :user).find(params[:id])
+    @question = Question.includes(:ai_answer, :user, comments: :user).find(params[:id])
+    @comment = Comment.new
   end
 
   def new
