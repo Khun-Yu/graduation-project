@@ -1,0 +1,29 @@
+<h1 class="text-2xl font-bold text-gray-800 mb-6">Q&A一覧</h1>
+
+<!-- Search -->
+<%= form_with url: questions_path, method: :get, class: "mb-6" do |f| %>
+  <div class="flex gap-2">
+    <%= f.text_field :keyword, value: params[:keyword], placeholder: "キーワードで検索...", class: "flex-1 border border-gray-300 rounded-md px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary" %>
+    <%= f.submit "検索", class: "bg-primary hover:bg-primary-dark text-white px-6 py-2 rounded-md text-sm font-semibold transition cursor-pointer" %>
+  </div>
+<% end %>
+
+<% if @questions.any? %>
+  <div class="space-y-4">
+    <% @questions.each do |question| %>
+      <%= render "questions/card", question: question %>
+    <% end %>
+  </div>
+
+  <div class="mt-8">
+    <%= paginate @questions %>
+  </div>
+<% else %>
+  <p class="text-gray-500 text-center py-8">
+    <% if params[:keyword].present? %>
+      「<%= params[:keyword] %>」に一致する質問はありませんでした。
+    <% else %>
+      まだ質問がありません。
+    <% end %>
+  </p>
+<% end %>

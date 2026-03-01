@@ -1,0 +1,16 @@
+<h1 class="text-2xl font-bold text-gray-800 mb-2">マイページ</h1>
+<p class="text-gray-500 mb-6"><%= current_user.name %> さんの質問履歴</p>
+
+<% if @questions.any? %>
+  <div class="space-y-4">
+    <% @questions.each do |question| %>
+      <%= render "questions/card", question: question %>
+    <% end %>
+  </div>
+
+  <div class="mt-8">
+    <%= paginate @questions %>
+  </div>
+<% else %>
+  <p class="text-gray-500 text-center py-8">まだ質問を投稿していません。</p>
+<% end %>

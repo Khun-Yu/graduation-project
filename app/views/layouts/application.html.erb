@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <title><%= content_for(:title) || "ほけんのQ&A" %></title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="application-name" content="ほけんのQ&A">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+    <%= yield :head %>
+    <link rel="icon" href="/icon.png" type="image/png">
+    <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
+  </head>
+
+  <body class="bg-bg min-h-screen flex flex-col">
+    <!-- Header -->
+    <header class="bg-primary text-white shadow-md">
+      <nav class="container mx-auto px-4 py-3 flex items-center justify-between">
+        <%= link_to "ほけんのQ&A", root_path, class: "text-xl font-bold hover:opacity-80" %>
+        <div class="flex items-center gap-4 text-sm">
+          <%= link_to "Q&A一覧", questions_path, class: "hover:underline" %>
+          <% if user_signed_in? %>
+            <%= link_to "質問する", new_question_path, class: "bg-accent hover:bg-accent-dark px-4 py-2 rounded-md font-semibold transition" %>
+            <%= link_to "マイページ", mypage_path, class: "hover:underline" %>
+            <%= button_to "ログアウト", destroy_user_session_path, method: :delete, class: "hover:underline cursor-pointer" %>
+          <% else %>
+            <%= link_to "ログイン", new_user_session_path, class: "hover:underline" %>
+            <%= link_to "新規登録", new_user_registration_path, class: "bg-accent hover:bg-accent-dark px-4 py-2 rounded-md font-semibold transition" %>
+          <% end %>
+        </div>
+      </nav>
+    </header>
+
+    <!-- Flash Messages -->
+    <% if notice %>
+      <div class="bg-green-100 border border-green-300 text-green-800 px-4 py-3 text-center text-sm">
+        <%= notice %>
+      </div>
+    <% end %>
+    <% if alert %>
+      <div class="bg-red-100 border border-red-300 text-red-800 px-4 py-3 text-center text-sm">
+        <%= alert %>
+      </div>
+    <% end %>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-8 flex-1">
+      <%= yield %>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-primary text-white text-center text-xs py-4">
+      <p>&copy; <%= Date.today.year %> ほけんのQ&A</p>
+    </footer>
+  </body>
+</html>

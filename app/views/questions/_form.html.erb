@@ -1,0 +1,25 @@
+<%= form_with(model: question, class: "space-y-6") do |f| %>
+  <% if question.errors.any? %>
+    <div class="bg-red-50 border border-red-300 rounded-md p-4 text-sm text-red-700">
+      <ul class="list-disc list-inside">
+        <% question.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <%= f.label :title, "タイトル", class: "block text-sm font-semibold text-gray-700 mb-1" %>
+    <%= f.text_field :title, placeholder: "例: 火災保険の水災補償の対象範囲について", class: "w-full border border-gray-300 rounded-md px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary" %>
+  </div>
+
+  <div>
+    <%= f.label :content, "質問内容", class: "block text-sm font-semibold text-gray-700 mb-1" %>
+    <%= f.text_area :content, rows: 8, placeholder: "質問の詳細を記入してください...", class: "w-full border border-gray-300 rounded-md px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary" %>
+  </div>
+
+  <div>
+    <%= f.submit "質問を投稿する", class: "w-full bg-accent hover:bg-accent-dark text-white py-3 rounded-lg font-semibold transition cursor-pointer", data: { turbo_submits_with: "送信中..." } %>
+  </div>
+<% end %>

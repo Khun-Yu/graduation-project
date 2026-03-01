@@ -1,0 +1,25 @@
+<section class="text-center mb-12">
+  <h1 class="text-3xl font-bold text-primary mb-4">ほけんのQ&A</h1>
+  <p class="text-gray-600 mb-6">損害保険の疑問をAIが回答。実務に役立つ知識をすぐに。</p>
+  <% if user_signed_in? %>
+    <%= link_to "質問する", new_question_path, class: "inline-block bg-accent hover:bg-accent-dark text-white px-6 py-3 rounded-lg font-semibold transition" %>
+  <% else %>
+    <%= link_to "新規登録して質問する", new_user_registration_path, class: "inline-block bg-accent hover:bg-accent-dark text-white px-6 py-3 rounded-lg font-semibold transition" %>
+  <% end %>
+</section>
+
+<section>
+  <h2 class="text-xl font-bold text-gray-800 mb-4">最新のQ&A</h2>
+  <% if @recent_questions.any? %>
+    <div class="space-y-4">
+      <% @recent_questions.each do |question| %>
+        <%= render "questions/card", question: question %>
+      <% end %>
+    </div>
+    <div class="text-center mt-6">
+      <%= link_to "すべてのQ&Aを見る →", questions_path, class: "text-primary hover:underline font-semibold" %>
+    </div>
+  <% else %>
+    <p class="text-gray-500 text-center py-8">まだ質問がありません。最初の質問を投稿してみましょう！</p>
+  <% end %>
+</section>

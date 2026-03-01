@@ -1,0 +1,26 @@
+databases:
+  - name: hoken-qa-db
+    plan: free
+    databaseName: hoken_qa_production
+    user: hoken_qa
+
+services:
+  - type: web
+    name: hoken-qa
+    runtime: ruby
+    plan: free
+    buildCommand: bundle install && bundle exec rails assets:precompile && bundle exec rails db:migrate
+    startCommand: bundle exec puma -C config/puma.rb
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: hoken-qa-db
+          property: connectionString
+      - key: RAILS_MASTER_KEY
+        sync: false
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: RAILS_ENV
+        value: production
+      - key: RAILS_LOG_TO_STDOUT
+        value: "true"
